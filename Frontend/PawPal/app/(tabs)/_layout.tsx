@@ -7,59 +7,75 @@ import { IconSymbol } from "@/components/ui/IconSymbol";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { ProfileButton } from "@/components/ui/ProfileButton";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-
+  const iconSize = 28;
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerShown: false,
+        tabBarActiveTintColor: Colors.mainColor,
+        tabBarInactiveTintColor: Colors.mainColorInactive,
+        headerShown: true,
+        headerStyle: {
+          backgroundColor: "#fff",
+          shadowColor: "transparent",
+        },
         tabBarButton: HapticTab,
+        headerLeft: () => (
+          <IconSymbol
+            name="pawicon"
+            style={{ paddingLeft: 16 }}
+            color={Colors.mainColor}
+            size={30}
+          />
+        ),
+        headerRight: () => <ProfileButton onPress={() => {}} />,
         tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: "absolute",
-          },
-          default: {},
-        }),
+        tabBarStyle: {
+          backgroundColor: Colors.background,
+        },
       }}
     >
       <Tabs.Screen
         name="schedule"
         options={{
-          title: "Schedule",
+          headerTitle: "",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="calendar.fill" color={color} />
+            <IconSymbol size={iconSize} name="calendar.fill" color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="chats"
         options={{
-          title: "Chats",
+          headerTitle: "",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="message.fill" color={color} />
+            <IconSymbol size={iconSize} name="message.fill" color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          headerShown: false,
+          headerTitle: "",
+          headerStyle: {
+            backgroundColor: "#fff",
+            shadowColor: "transparent",
+          },
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
+            <IconSymbol size={iconSize} name="house.fill" color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="requests"
         options={{
-          title: "Requests",
+          headerTitle: "",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="requesticon.fill" color={color} />
+            <IconSymbol size={iconSize} name="requesticon.fill" color={color} />
           ),
         }}
       />
