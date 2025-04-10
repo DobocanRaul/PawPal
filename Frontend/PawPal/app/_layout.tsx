@@ -37,7 +37,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
           name="profile"
-          options={{ navigationBarHidden: true, presentation: "modal" }}
+          options={{ navigationBarHidden: true, headerShown: false }}
         />
         <Stack.Screen name="+not-found" />
       </Stack>

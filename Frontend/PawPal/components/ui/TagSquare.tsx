@@ -10,7 +10,7 @@ export function TagSquare({
 }) {
   return (
     <View style={[styles.tagContainer]}>
-      <IconSymbol name={iconName} size={18} color={Colors.iconSecondary} />
+      <IconSymbol name={iconName} size={14} color={Colors.iconSecondary} />
       <Text style={[styles.tagText, styles.specificFontFamily]}>
         {displayText}
       </Text>
@@ -22,17 +22,19 @@ const styles = StyleSheet.create({
   tagContainer: {
     backgroundColor: Colors.light.secondaryColor,
     borderRadius: 8,
-    padding: 8,
+    paddingHorizontal: 16,
     margin: 4,
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    height: "50%",
+    gap: 4,
   },
   tagText: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#333",
   },
   specificFontFamily: {
     fontFamily: "Inter-Regular",
+    fontWeight: "900",
   },
 });

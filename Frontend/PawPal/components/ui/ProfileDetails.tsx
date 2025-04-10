@@ -53,7 +53,13 @@ export function ProfileDetails() {
           <Text style={[Styles.specificFontFamily, Styles.textSize]}>
             Hi, I'm{" "}
           </Text>
-          <Text style={[{ fontSize: 32 }, Styles.specificFontFamily]}>
+          <Text
+            style={[
+              { fontSize: 36 },
+              Styles.specificFontFamily,
+              Styles.boldFont,
+            ]}
+          >
             {name}
           </Text>
           <StarRating
@@ -65,9 +71,16 @@ export function ProfileDetails() {
             onChange={(_) => {}}
           />
         </View>
-        <View style={{ flexDirection: "column", flex: 1 }}>
+        <View
+          style={{
+            flexDirection: "column",
+            flex: 0.9,
+          }}
+        >
           <View style={{ flex: 1 }}>
-            <Text style={Styles.specificFontFamily}>I'm best with</Text>
+            <Text style={[Styles.specificFontFamily, Styles.boldFont]}>
+              I'm best with
+            </Text>
             <FlatList
               data={BestWithTags}
               horizontal={true}
@@ -78,7 +91,9 @@ export function ProfileDetails() {
             />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={Styles.specificFontFamily}>I'm available on</Text>
+            <Text style={[Styles.specificFontFamily, Styles.boldFont]}>
+              I'm available on
+            </Text>
             <FlatList
               data={AvailabilityTags}
               horizontal={true}
@@ -89,7 +104,9 @@ export function ProfileDetails() {
             />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={Styles.specificFontFamily}>Me in a nutshell</Text>
+            <Text style={[Styles.specificFontFamily, Styles.boldFont]}>
+              Me in a nutshell
+            </Text>
             <FlatList
               data={DescriptionTags}
               horizontal={true}
@@ -110,5 +127,8 @@ const Styles = StyleSheet.create({
   },
   specificFontFamily: {
     fontFamily: "Inter-Regular",
+  },
+  boldFont: {
+    fontWeight: "900",
   },
 });

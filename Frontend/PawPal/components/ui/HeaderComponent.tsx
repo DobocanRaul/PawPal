@@ -1,6 +1,8 @@
 import { View, Text, Button, TouchableOpacity } from "react-native";
 import { IconSymbol } from "./IconSymbol";
+import { useNavigation } from "expo-router";
 export function HeaderComponent() {
+  const navigation = useNavigation();
   return (
     <View style={{ paddingTop: 16 }}>
       <View
@@ -13,7 +15,9 @@ export function HeaderComponent() {
         }}
       >
         <TouchableOpacity
-          onPress={() => {}}
+          onPress={() => {
+            navigation.goBack();
+          }}
           style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
         >
           <IconSymbol name="arrow-back-ios" size={16} color="black" />

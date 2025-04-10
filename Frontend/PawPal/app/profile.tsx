@@ -1,9 +1,10 @@
-import { View, Text } from "react-native";
+import { ThemedView } from "@/components/ThemedView";
+import { ProfileDetails } from "@/components/ui/ProfileDetails";
 
 export default function profile() {
   return (
-    <View style={{ backgroundColor: "#fff", flex: 1, paddingTop: 40 }}>
-      <Text>Profile</Text>
-    </View>
+    <ThemedView style={{ flex: 1, paddingTop: 40, backgroundColor: "#fff" }}>
+      <ProfileDetails />
+    </ThemedView>
   );
 }
