@@ -9,6 +9,7 @@ export function HeaderComponent() {
           justifyContent: "space-between",
           gap: 8,
           paddingHorizontal: 16,
+          paddingBottom: 8,
         }}
       >
         <TouchableOpacity

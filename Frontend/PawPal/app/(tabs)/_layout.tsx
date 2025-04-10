@@ -1,17 +1,18 @@
-import { Tabs } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import React from "react";
-import { Platform } from "react-native";
-
+import { useNavigation } from "expo-router";
 import { HapticTab } from "@/components/HapticTab";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { ProfileButton } from "@/components/ui/ProfileButton";
+import { StackNavigationState } from "@react-navigation/native";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const iconSize = 28;
+  const router = useRouter();
   return (
     <Tabs
       screenOptions={{
@@ -31,7 +32,13 @@ export default function TabLayout() {
             size={30}
           />
         ),
-        headerRight: () => <ProfileButton onPress={() => {}} />,
+        headerRight: () => (
+          <ProfileButton
+            onPress={() => {
+              router.push("/profile");
+            }}
+          />
+        ),
         tabBarBackground: TabBarBackground,
         tabBarStyle: {
           backgroundColor: Colors.background,

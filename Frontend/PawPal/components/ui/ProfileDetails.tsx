@@ -1,12 +1,9 @@
 import React from "react";
-import { View, Text, Button, TouchableOpacity, Image } from "react-native";
-import { IconSymbol } from "@/components/ui/IconSymbol";
+import { View, Text, StyleSheet, Image } from "react-native";
 import { HeaderComponent } from "./HeaderComponent";
 import StarRating from "react-native-star-rating-widget";
 import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
 import { TagSquare } from "./TagSquare";
-import { Colors } from "@/constants/Colors";
-import { ProfileButton } from "./ProfileButton";
 type Profile = {
   id: string;
   name: string;
@@ -37,7 +34,7 @@ export function ProfileDetails() {
           flex: 1,
           flexDirection: "column",
           gap: 16,
-          padding: 16,
+          paddingHorizontal: 20,
         }}
       >
         <Image
@@ -53,8 +50,12 @@ export function ProfileDetails() {
         <View
           style={{ flexDirection: "column", alignItems: "flex-start", gap: 8 }}
         >
-          <Text>Hi, I'm </Text>
-          <Text>{name}</Text>
+          <Text style={[Styles.specificFontFamily, Styles.textSize]}>
+            Hi, I'm{" "}
+          </Text>
+          <Text style={[{ fontSize: 32 }, Styles.specificFontFamily]}>
+            {name}
+          </Text>
           <StarRating
             rating={rating}
             maxStars={5}
@@ -66,7 +67,7 @@ export function ProfileDetails() {
         </View>
         <View style={{ flexDirection: "column", flex: 1 }}>
           <View style={{ flex: 1 }}>
-            <Text>I'm best with</Text>
+            <Text style={Styles.specificFontFamily}>I'm best with</Text>
             <FlatList
               data={BestWithTags}
               horizontal={true}
@@ -77,7 +78,7 @@ export function ProfileDetails() {
             />
           </View>
           <View style={{ flex: 1 }}>
-            <Text>I'm available on</Text>
+            <Text style={Styles.specificFontFamily}>I'm available on</Text>
             <FlatList
               data={AvailabilityTags}
               horizontal={true}
@@ -88,7 +89,7 @@ export function ProfileDetails() {
             />
           </View>
           <View style={{ flex: 1 }}>
-            <Text>Me in a nutshell</Text>
+            <Text style={Styles.specificFontFamily}>Me in a nutshell</Text>
             <FlatList
               data={DescriptionTags}
               horizontal={true}
@@ -102,3 +103,12 @@ export function ProfileDetails() {
     </GestureHandlerRootView>
   );
 }
+
+const Styles = StyleSheet.create({
+  textSize: {
+    fontSize: 24,
+  },
+  specificFontFamily: {
+    fontFamily: "Inter-Regular",
+  },
+});

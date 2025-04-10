@@ -9,9 +9,11 @@ export function TagSquare({
   iconName: string;
 }) {
   return (
-    <View style={styles.tagContainer}>
-      <IconSymbol name={iconName} size={20} color={Colors.iconSecondary} />
-      <Text style={styles.tagText}>{displayText}</Text>
+    <View style={[styles.tagContainer]}>
+      <IconSymbol name={iconName} size={18} color={Colors.iconSecondary} />
+      <Text style={[styles.tagText, styles.specificFontFamily]}>
+        {displayText}
+      </Text>
     </View>
   );
 }
@@ -29,5 +31,8 @@ const styles = StyleSheet.create({
   tagText: {
     fontSize: 14,
     color: "#333",
+  },
+  specificFontFamily: {
+    fontFamily: "Inter-Regular",
   },
 });
