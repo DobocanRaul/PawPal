@@ -21,6 +21,7 @@ const MAPPING = {
   pawicon: "pets",
   fingerprintIcon: "fingerprint",
   person: "person",
+  location: "location-pin",
 } as Partial<
   Record<
     import("expo-symbols").SymbolViewProps["name"],

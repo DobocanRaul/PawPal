@@ -7,10 +7,9 @@ import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { ProfileButton } from "@/components/ui/ProfileButton";
-import { StackNavigationState } from "@react-navigation/native";
+import { TouchableOpacity } from "react-native";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
   const iconSize = 28;
   const router = useRouter();
   return (
@@ -25,12 +24,18 @@ export default function TabLayout() {
         },
         tabBarButton: HapticTab,
         headerLeft: () => (
-          <IconSymbol
-            name="pawicon"
-            style={{ paddingLeft: 16 }}
-            color={Colors.mainColor}
-            size={30}
-          />
+          <TouchableOpacity
+            onPress={() => {
+              router.push("/");
+            }}
+          >
+            <IconSymbol
+              name="pawicon"
+              style={{ paddingLeft: 16 }}
+              color={Colors.mainColor}
+              size={30}
+            />
+          </TouchableOpacity>
         ),
         headerRight: () => (
           <ProfileButton
@@ -52,6 +57,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <IconSymbol size={iconSize} name="calendar.fill" color={color} />
           ),
+          tabBarLabel: "Schedule",
         }}
       />
       <Tabs.Screen
@@ -61,12 +67,12 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <IconSymbol size={iconSize} name="message.fill" color={color} />
           ),
+          tabBarLabel: "Messages",
         }}
       />
       <Tabs.Screen
         name="index"
         options={{
-          headerShown: false,
           headerTitle: "",
           headerStyle: {
             backgroundColor: "#fff",
@@ -75,6 +81,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <IconSymbol size={iconSize} name="house.fill" color={color} />
           ),
+          tabBarLabel: "Home",
         }}
       />
       <Tabs.Screen
@@ -84,6 +91,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <IconSymbol size={iconSize} name="requesticon.fill" color={color} />
           ),
+          tabBarLabel: "Requests",
         }}
       />
     </Tabs>
