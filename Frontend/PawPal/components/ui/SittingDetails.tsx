@@ -4,18 +4,31 @@ import { Styles } from "@/constants/Styles";
 import { Colors } from "@/constants/Colors";
 import { IconSymbol } from "./IconSymbol";
 
-export function SittingDetails(sittingDetails: SittingProfile) {
+type SittingDetailsProps = {
+  sittingDetails: SittingProfile;
+  isUrgent?: boolean;
+};
+
+export function SittingDetails({
+  sittingDetails,
+  isUrgent,
+}: SittingDetailsProps) {
   const { name, image, date, time, location } = sittingDetails;
+  const textColor = isUrgent ? Colors.urgentTextColor : Colors.iconSecondary;
+  const backgroundColor = isUrgent
+    ? Colors.urgentColor
+    : Colors.cardBackgroundColor;
+  const borderColor = isUrgent ? Colors.urgentTextColor : Colors.mainColor;
   return (
     <View
       style={{
         flexDirection: "row",
         width: "100%",
         gap: 8,
-        backgroundColor: Colors.cardBackgroundColor,
+        backgroundColor: backgroundColor,
         borderRadius: 16,
         marginVertical: 8,
-        borderColor: Colors.borderColor,
+        borderColor: borderColor,
         borderWidth: 1,
       }}
     >
@@ -41,11 +54,17 @@ export function SittingDetails(sittingDetails: SittingProfile) {
               { fontSize: 22 },
               Styles.specificFontFamily,
               Styles.boldFont,
+              { color: textColor, fontWeight: "bold" },
             ]}
           >
             {name}
           </Text>
-          <Text style={[{ fontSize: 12 }, Styles.specificFontFamily]}>
+          <Text
+            style={[
+              { fontSize: 12, color: textColor },
+              Styles.specificFontFamily,
+            ]}
+          >
             {date + " at " + time}
           </Text>
         </View>
@@ -57,14 +76,24 @@ export function SittingDetails(sittingDetails: SittingProfile) {
           }}
         >
           <View style={{ flexDirection: "row", gap: 4, alignItems: "center" }}>
-            <IconSymbol name="location" color={Colors.iconSecondary} />
-            <Text style={[{ fontSize: 12 }, Styles.specificFontFamily]}>
+            <IconSymbol name="location" color={textColor} />
+            <Text
+              style={[
+                { fontSize: 12, color: textColor },
+                Styles.specificFontFamily,
+              ]}
+            >
               {location}
             </Text>
           </View>
           <View style={{ alignItems: "flex-end", padding: 8 }}>
             <TouchableOpacity>
-              <Text style={{ color: Colors.mainColor, fontWeight: "bold" }}>
+              <Text
+                style={{
+                  color: isUrgent ? Colors.urgentTextColor : Colors.mainColor,
+                  fontWeight: "bold",
+                }}
+              >
                 See more {">"}
               </Text>
             </TouchableOpacity>

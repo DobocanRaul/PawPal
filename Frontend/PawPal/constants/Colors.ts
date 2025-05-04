@@ -31,4 +31,6 @@ export const Colors = {
   mainColorInactive: "#c397fc",
   cardBackgroundColor: "#F8F1FF",
   borderColor: "#D7B8FF",
+  urgentColor: "#FFEFF5",
+  urgentTextColor: "#FF4545",
 };
