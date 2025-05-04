@@ -50,7 +50,7 @@ export default function TabTwoScreen() {
       <FlatList
         data={sittingProfiles}
         style={{ width: "100%", paddingHorizontal: 16 }}
-        renderItem={({ item }) => <SittingDetails {...item} />}
+        renderItem={({ item }) => <SittingDetails sittingDetails={item} />}
       />
       <TouchableOpacity>
         <Text style={styles.historyText}>View sitting history {">"}</Text>
