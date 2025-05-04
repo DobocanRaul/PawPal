@@ -39,6 +39,10 @@ export default function RootLayout() {
           name="profile"
           options={{ navigationBarHidden: true, headerShown: false }}
         />
+        <Stack.Screen
+          name="sittingHistory"
+          options={{ navigationBarHidden: true, headerShown: false }}
+        />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />

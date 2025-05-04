@@ -1,5 +1,6 @@
 import { SittingDetails } from "@/components/ui/SittingDetails";
 import { Colors } from "@/constants/Colors";
+import { useRouter } from "expo-router";
 import {
   StyleSheet,
   Text,
@@ -19,6 +20,7 @@ export type SittingProfile = {
 };
 
 export default function TabTwoScreen() {
+  const router = useRouter();
   const sittingProfiles: SittingProfile[] = [
     {
       name: "John Doe",
@@ -52,7 +54,11 @@ export default function TabTwoScreen() {
         style={{ width: "100%", paddingHorizontal: 16 }}
         renderItem={({ item }) => <SittingDetails sittingDetails={item} />}
       />
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          router.push("/sittingHistory");
+        }}
+      >
         <Text style={styles.historyText}>View sitting history {">"}</Text>
       </TouchableOpacity>
     </View>
