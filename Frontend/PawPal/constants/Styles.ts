@@ -1,9 +1,7 @@
 import { StyleSheet } from "react-native";
 
 export const Styles = StyleSheet.create({
-  specificFontFamily: {
-    fontFamily: "Inter-Regular",
-  },
+  specificFontFamily: {},
   boldFont: {
     fontWeight: "bold",
   },

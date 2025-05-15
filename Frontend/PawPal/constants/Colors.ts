@@ -33,4 +33,9 @@ export const Colors = {
   borderColor: "#D7B8FF",
   urgentColor: "#FFEFF5",
   urgentTextColor: "#FF4545",
+  SittingHistoryCard: {
+    BackgroundColor: "#F9FFEF",
+    StarColor: "#7EA046",
+    BorderColor: "#5C6B2D",
+  },
 };

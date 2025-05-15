@@ -1,12 +1,14 @@
-import { useNavigation } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import { TouchableOpacity, Text } from "react-native";
 import { IconSymbol } from "./IconSymbol";
+import { useRoute } from "@react-navigation/native";
 export function BackButton() {
   const navigation = useNavigation();
+  const router = useRouter();
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.goBack();
+        router.back();
       }}
       style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
     >

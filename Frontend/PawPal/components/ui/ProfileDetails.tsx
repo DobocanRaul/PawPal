@@ -4,6 +4,7 @@ import { HeaderComponent } from "./HeaderComponent";
 import StarRating from "react-native-star-rating-widget";
 import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
 import { TagSquare } from "./TagSquare";
+import { Colors } from "@/constants/Colors";
 type Profile = {
   id: string;
   name: string;
@@ -66,7 +67,7 @@ export function ProfileDetails() {
             rating={rating}
             maxStars={5}
             starSize={24}
-            color="#9747FF"
+            color={Colors.mainColor}
             starStyle={{ marginHorizontal: 0 }}
             onChange={(_) => {}}
           />
