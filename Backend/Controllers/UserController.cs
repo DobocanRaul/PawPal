@@ -2,6 +2,8 @@
 using Backend___PawPal.DTOs;
 using Backend___PawPal.Models;
 using Backend___PawPal.Validators;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -96,4 +98,23 @@ public class UserController : Controller
             Image = newUser.Image
         });
     }
+
+    [HttpPut("UpdateUser/{userId}")]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> UpdateUser([FromForm] UserDto user)
+    {
+        User foundUser = await _context.Users.FirstOrDefaultAsync(dbUser => user.Id == dbUser.Id);
+        if (foundUser == null) {
+            return NotFound();
+        }
+
+        foundUser.Name = user.Name;
+        foundUser.Image = user.Image;
+
+
+        return Ok(foundUser);
+
+        
+    }
+
 }
