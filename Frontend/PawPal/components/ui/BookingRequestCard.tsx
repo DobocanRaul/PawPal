@@ -7,9 +7,11 @@ import { View, Image, Button, Text, TouchableOpacity } from "react-native";
 type BookingRequestCardProps = {
   booking: Booking;
   user: UserProfile;
+  refresh: () => void;
 };
 export function BookingRequestCard(props: BookingRequestCardProps) {
-  const { booking, user } = props;
+  const { booking, user, refresh } = props;
+  const URL_API = process.env.EXPO_PUBLIC_API_URL;
   return (
     <View
       style={{
@@ -60,12 +62,48 @@ export function BookingRequestCard(props: BookingRequestCardProps) {
         }}
       >
         <Button
-          onPress={() => {}}
+          onPress={() => {
+            fetch(URL_API + "/BookingRequest/ResolveRequest", {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                bookingId: booking.id,
+                sitterId: user.id,
+                status: "Accepted",
+              }),
+            })
+              .then(() => {
+                refresh();
+              })
+              .catch((error) => {
+                console.error("Error accepting booking request:", error);
+              });
+          }}
           title="Accept"
           color={Colors.AcceptButtonColor}
         />
         <Button
-          onPress={() => {}}
+          onPress={() => {
+            fetch(URL_API + "/BookingRequest/ResolveRequest", {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                bookingId: booking.id,
+                sitterId: user.id,
+                status: "Rejected",
+              }),
+            })
+              .then(() => {
+                refresh;
+              })
+              .catch((error) => {
+                console.error("Error accepting booking request:", error);
+              });
+          }}
           title="Decline"
           color={Colors.RejectButtonColor}
         />

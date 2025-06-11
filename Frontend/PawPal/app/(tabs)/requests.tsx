@@ -10,11 +10,12 @@ import {
 } from "react-native";
 import { Booking } from "./schedule";
 import { SittingDetails } from "@/components/ui/SittingDetails";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import * as SecureStorage from "expo-secure-store";
 import { UserProfile } from "../profile/[userId]";
 import { BookingRequestCard } from "@/components/ui/BookingRequestCard";
+import { useFocusEffect } from "expo-router";
 
 export type BookingRequest = {
   booking: Booking;
@@ -28,27 +29,30 @@ export default function Requests() {
   const [isLoading, setIsLoading] = useState(false);
   const [bookingRequests, setBookingRequests] = useState<BookingRequest[]>([]);
   const [urgentSittings, setUrgentSittings] = useState<Booking[]>([]);
-  useEffect(() => {
-    const userId = SecureStorage.getItem("userId");
-    setUrgentSittings(
-      bookings.filter((booking) => {
-        return (
-          new Date(booking.startDate).getDate() - currentDate.getDate() <= 2
-        );
-      })
-    );
+  const [trigger, setTrigger] = useState(false);
+  const userId = SecureStorage.getItem("userId");
+  useFocusEffect(
+    useCallback(() => {
+      setUrgentSittings(
+        bookings.filter((booking) => {
+          return (
+            new Date(booking.startDate).getDate() - currentDate.getDate() <= 2
+          );
+        })
+      );
 
-    fetch(
-      process.env.EXPO_PUBLIC_API_URL +
-        "/BookingRequest/GetActiveRequests/" +
-        userId
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setBookingRequests(data ?? []);
-        setIsLoading(false);
-      });
-  }, [bookings]);
+      fetch(
+        process.env.EXPO_PUBLIC_API_URL +
+          "/BookingRequest/GetActiveRequests/" +
+          userId
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          setBookingRequests(data ?? []);
+          setIsLoading(false);
+        });
+    }, [bookings])
+  );
   return (
     <View style={styles.mainContainer}>
       <Text style={styles.titleStyle}>Pets in need!</Text>
@@ -73,7 +77,11 @@ export default function Requests() {
             setIsLoading(true);
             const API_URL = process.env.EXPO_PUBLIC_API_URL;
             fetch(
-              API_URL + "/Booking/getAvailableBookingsByLocation/" + location
+              API_URL +
+                "/Booking/getAvailableBookingsByLocation/" +
+                location +
+                "/" +
+                userId
             )
               .then((response) => response.json())
               .then((data) => {
@@ -96,7 +104,12 @@ export default function Requests() {
             data={urgentSittings}
             style={{ width: "100%", padding: 16 }}
             renderItem={({ item }) => (
-              <SittingDetails sittingDetails={item} isUrgent={true} />
+              <SittingDetails
+                sittingDetails={item}
+                isUrgent={true}
+                canBook={true}
+                bookingId={item.id}
+              />
             )}
           />
           <View
@@ -146,7 +159,11 @@ export default function Requests() {
           data={bookingRequests}
           style={{ width: "100%", paddingHorizontal: 16 }}
           renderItem={({ item }) => (
-            <BookingRequestCard booking={item.booking} user={item.sitter} />
+            <BookingRequestCard
+              booking={item.booking}
+              user={item.sitter}
+              refresh={() => setTrigger(!trigger)}
+            />
           )}
           keyExtractor={(item) => item.booking.id + item.sitter.id}
         />
