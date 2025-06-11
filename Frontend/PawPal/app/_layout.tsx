@@ -35,7 +35,7 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
-          name="profile"
+          name="profile/[userId]"
           options={{ navigationBarHidden: true, headerShown: false }}
         />
         <Stack.Screen
