@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import * as SecureStore from "expo-secure-store";
 export default function HomeScreen() {
-  SecureStore.setItem("userId", "48163B87-EC9F-4825-858B-D27C78869C41");
+  SecureStore.setItem("userId", "00B16E73-9649-44A6-BB17-902DAB8150C2");
   return (
     <ThemedView
       style={{ flex: 1, paddingTop: 40, backgroundColor: "#fff" }}
