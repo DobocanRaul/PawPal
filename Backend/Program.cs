@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Any;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +23,11 @@ builder.Services.AddIdentityApiEndpoints<IdentityUser>()
 IConfigurationSection jwtSettings = builder.Configuration.GetSection("jwtConfig");
 string jwtSecret = jwtSettings["secret"];
 
-builder.Services.AddAuthentication("Bearer")
+builder.Services
+    .AddAuthentication(opt =>{
+        opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
     .AddJwtBearer("Bearer", options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -30,6 +36,7 @@ builder.Services.AddAuthentication("Bearer")
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
+            SaveSigninToken = true,
 
             ValidIssuer = jwtSettings["validIssuer"],
             ValidAudience = jwtSettings["validAudience"],
@@ -37,6 +44,13 @@ builder.Services.AddAuthentication("Bearer")
                 Encoding.UTF8.GetBytes(jwtSecret))
         };
     });
+
+builder.Services.AddAuthorization();
+
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(5173); 
+});
 
 builder.Services.AddCors(options =>
 {
@@ -57,6 +71,41 @@ builder.Services.AddDbContext<PawPalDbContext>(options =>
 });
 
 builder.Services.AddScoped<PawPalDbContext>();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition(name: "Bearer", securityScheme: new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`. You need to execute one of the Login methods to get the token.",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    }
+    
+    );
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
+                            Reference = new OpenApiReference
+                            {
+                                Id = "Bearer",
+                                Type = ReferenceType.SecurityScheme
+                            }
+                        },
+                        new List<string>()
+                    }
+                });
+    options.MapType<DateOnly>(() => new OpenApiSchema
+    {
+        Type = "string",
+        Format = "date",
+        Example = new OpenApiString(DateTime.Today.ToString("yyyy-MM-dd"))
+    });
+});
 
 var app = builder.Build();
 
@@ -75,6 +124,8 @@ using (var scope = app.Services.CreateScope())
         throw new Exception("Cannot connect to the database");
     }
 }
+
+
 
 app.UseHttpsRedirection();
 app.MapGroup("/identity").MapIdentityApi<IdentityUser>();

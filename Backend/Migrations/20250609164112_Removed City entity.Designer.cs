@@ -4,6 +4,7 @@ using Backend___PawPal.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend___PawPal.Migrations
 {
     [DbContext(typeof(PawPalDbContext))]
-    partial class PawPalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250609164112_Removed City entity")]
+    partial class RemovedCityentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,9 +41,6 @@ namespace Backend___PawPal.Migrations
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("PetId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateOnly>("StartDate")
                         .HasColumnType("date");
 
@@ -51,33 +51,9 @@ namespace Backend___PawPal.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.HasIndex("PetId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Bookings");
-                });
-
-            modelBuilder.Entity("Backend___PawPal.Models.BookingRequest", b =>
-                {
-                    b.Property<Guid>("BookingId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SitterId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("RequestDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("BookingId", "SitterId");
-
-                    b.HasIndex("SitterId");
-
-                    b.ToTable("BookingRequests");
                 });
 
             modelBuilder.Entity("Backend___PawPal.Models.Pet", b =>
@@ -129,26 +105,6 @@ namespace Backend___PawPal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.PrimitiveCollection<string>("AvailabilityTags")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.PrimitiveCollection<string>("BestWithTags")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.PrimitiveCollection<string>("DescriptionTags")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<byte[]>("Image")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
@@ -157,15 +113,27 @@ namespace Backend___PawPal.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("NumberOfRatings")
-                        .HasColumnType("int");
-
                     b.Property<float>("Rating")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("BookingPet", b =>
+                {
+                    b.Property<Guid>("BookingsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PetsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("BookingsId", "PetsId");
+
+                    b.HasIndex("PetsId");
+
+                    b.ToTable("BookingPet");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -374,12 +342,6 @@ namespace Backend___PawPal.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Backend___PawPal.Models.Pet", "Pet")
-                        .WithMany()
-                        .HasForeignKey("PetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Backend___PawPal.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -387,28 +349,7 @@ namespace Backend___PawPal.Migrations
 
                     b.Navigation("Owner");
 
-                    b.Navigation("Pet");
-
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Backend___PawPal.Models.BookingRequest", b =>
-                {
-                    b.HasOne("Backend___PawPal.Models.Booking", "Booking")
-                        .WithMany()
-                        .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Backend___PawPal.Models.User", "Sitter")
-                        .WithMany()
-                        .HasForeignKey("SitterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Booking");
-
-                    b.Navigation("Sitter");
                 });
 
             modelBuilder.Entity("Backend___PawPal.Models.Pet", b =>
@@ -420,6 +361,21 @@ namespace Backend___PawPal.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("BookingPet", b =>
+                {
+                    b.HasOne("Backend___PawPal.Models.Booking", null)
+                        .WithMany()
+                        .HasForeignKey("BookingsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Backend___PawPal.Models.Pet", null)
+                        .WithMany()
+                        .HasForeignKey("PetsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

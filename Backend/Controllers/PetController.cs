@@ -3,6 +3,7 @@ using Backend___PawPal.Context;
 using Backend___PawPal.DTOs;
 using Backend___PawPal.Models;
 using Backend___PawPal.Validators;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -11,7 +12,7 @@ namespace Backend___PawPal.Controllers;
 
 [Route("api/[Controller]")]
 [ApiController]
-public class PetController : Controller
+public class PetController : ControllerBase
 
 {
     private readonly PawPalDbContext _context;

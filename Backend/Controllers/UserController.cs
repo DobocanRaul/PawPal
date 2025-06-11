@@ -1,9 +1,8 @@
-﻿using Backend___PawPal.Context;
+﻿using AutoMapper;
+using Backend___PawPal.Context;
 using Backend___PawPal.DTOs;
 using Backend___PawPal.Models;
 using Backend___PawPal.Validators;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -13,15 +12,16 @@ namespace Backend___PawPal.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class UserController : Controller
+public class UserController : ControllerBase
 {
 
     private readonly PawPalDbContext _context;
     private readonly ProfileValidator _validator = new ProfileValidator();
-    public UserController(PawPalDbContext context)
+    private readonly IMapper _mapper ;
+    public UserController(PawPalDbContext context,IMapper mapper )
     {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
-
+        _context = context ;
+        _mapper = mapper ;
     }
 
     [HttpGet("GetUserPhoto/{userId}")]
@@ -46,16 +46,10 @@ public class UserController : Controller
     {
         User user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
 
-        UserDto userDto;
+        UserDto userDto= new UserDto();
         if (user != null)
         {
-            userDto = new UserDto
-            {
-                Id = user.Id,
-                Name = user.Name,
-                Rating = user.Rating,
-                Image = user.Image
-            };
+            _mapper.Map(user,userDto);
             return Ok(userDto);
         }
 
@@ -68,7 +62,7 @@ public class UserController : Controller
 
     [HttpPost("CreateUser")]
     [Consumes("multipart/form-data")]
-    public async Task<IActionResult> CreateUser([FromForm] UserDtoForm userDto) {
+    public async Task<IActionResult> CreateUser([FromForm] UserDto userDto) {
         User newUser = new User();
 
         if (!_validator.Validate(userDto))
@@ -81,12 +75,10 @@ public class UserController : Controller
                 }
                            );
         }
+        _mapper.Map(userDto, newUser);
         newUser.Id = Guid.NewGuid();
-        newUser.Name = userDto.Name;
         newUser.Rating = 0;
-        using var memoryStream = new MemoryStream();
-        await userDto.Image.CopyToAsync(memoryStream);
-        newUser.Image = memoryStream.ToArray();
+        newUser.NumberOfRatings = 0;
         _context.Users.Add(newUser);
         await _context.SaveChangesAsync();
 
@@ -108,10 +100,7 @@ public class UserController : Controller
             return NotFound();
         }
 
-        foundUser.Name = user.Name;
-        foundUser.Image = user.Image;
-
-
+        _mapper.Map(user, foundUser);
         return Ok(foundUser);
 
         
