@@ -50,6 +50,13 @@ export default function RootLayout() {
           }}
         />
         <Stack.Screen name="+not-found" />
+        <Stack.Screen
+          name="addPetPage"
+          options={{
+            navigationBarHidden: true,
+            headerTitle: "Add a furry friend!",
+          }}
+        />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

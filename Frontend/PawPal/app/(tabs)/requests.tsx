@@ -51,7 +51,7 @@ export default function Requests() {
           setBookingRequests(data ?? []);
           setIsLoading(false);
         });
-    }, [bookings])
+    }, [bookings, trigger])
   );
   return (
     <View style={styles.mainContainer}>
@@ -162,7 +162,7 @@ export default function Requests() {
             <BookingRequestCard
               booking={item.booking}
               user={item.sitter}
-              refresh={() => setTrigger(!trigger)}
+              refresh={() => setTrigger((prev) => !prev)}
             />
           )}
           keyExtractor={(item) => item.booking.id + item.sitter.id}

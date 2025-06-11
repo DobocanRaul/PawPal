@@ -98,7 +98,7 @@ export function BookingRequestCard(props: BookingRequestCardProps) {
               }),
             })
               .then(() => {
-                refresh;
+                refresh();
               })
               .catch((error) => {
                 console.error("Error accepting booking request:", error);
