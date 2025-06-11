@@ -1,17 +1,18 @@
 import { SittingDetails } from "@/components/ui/SittingDetails";
 import { Colors } from "@/constants/Colors";
 import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
-  Image,
-  Platform,
   View,
   TouchableOpacity,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 
 export type SittingProfile = {
+  id: string;
   name: string;
   image: string;
   date: string;
@@ -19,41 +20,95 @@ export type SittingProfile = {
   location: string;
 };
 
+export type Pet = {
+  id: string;
+  name: string;
+  isFemale: boolean;
+  address: string;
+  age: number;
+  weight: number;
+  description: string;
+  image: string; // base64 string or image URL depending on your backend
+  tags: string[];
+  ownerId: string;
+  owner: null | any; // refine this if you model `User`
+};
+
+export type Booking = {
+  id: string;
+  ownerId: string;
+  petId: string;
+  pet: Pet;
+  userId: string;
+  startDate: string; // ISO date string
+  endDate: string;
+  address: string;
+};
+
 export default function TabTwoScreen() {
   const router = useRouter();
-  const sittingProfiles: SittingProfile[] = [
-    {
-      name: "John Doe",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-      date: "01/10/2023",
-      time: "10:00",
-      location: "Str. Republicii 81",
-    },
-    {
-      name: "John Doe",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-      date: "01/10/2023",
-      time: "10:00",
-      location: "Str. Republicii 81",
-    },
-    {
-      name: "John Doe",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-      date: "01/10/2023",
-      time: "10:00",
-      location: "Str. Republicii 81",
-    },
-  ];
+  const userId = "7CE73F01-2DE0-45CF-866A-E66F583880CB";
+  const API_URL = process.env.EXPO_PUBLIC_API_URL;
+  const [isLoading, setIsLoading] = useState(true);
+  const [sittingProfiles, setSittingProfiles] = useState<Booking[]>([]);
+  const [sittingRequests, setSittingRequests] = useState<Booking[]>([]);
+  useEffect(() => {
+    const sittingsUrl = API_URL + "/Booking/getSitterBookings/" + userId;
+    fetch(sittingsUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        setSittingProfiles(data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching sitting profiles:", error);
+        setIsLoading(false);
+      });
+    fetch(API_URL + "/Booking/getUserBookings/" + userId)
+      .then((response) => response.json())
+      .then((data) => {
+        setSittingRequests(data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching sitting requests:", error);
+        setIsLoading(false);
+      });
+  }, []);
+
   return (
     <View style={styles.mainContainer}>
       <Text style={styles.titleStyle}>
         Good luck on your {"\n"} next pawventure
       </Text>
-      <FlatList
-        data={sittingProfiles}
-        style={{ width: "100%", paddingHorizontal: 16 }}
-        renderItem={({ item }) => <SittingDetails sittingDetails={item} />}
-      />
+      <Text style={styles.titleStyle}>Your sitting requests!</Text>
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : !sittingRequests.length ? (
+        <Text style={{ fontSize: 16, color: Colors.light.text }}>
+          Oops ! No sittings are active right now.
+        </Text>
+      ) : (
+        <FlatList
+          data={sittingRequests}
+          style={{ width: "100%", paddingHorizontal: 16 }}
+          renderItem={({ item }) => <SittingDetails sittingDetails={item} />}
+        />
+      )}
+      <Text style={styles.titleStyle}>Your scheduled sittings!</Text>
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : !sittingProfiles.length ? (
+        <Text style={{ fontSize: 16, color: Colors.light.text }}>
+          Oops ! No Requests are active right now.
+        </Text>
+      ) : (
+        <FlatList
+          data={sittingProfiles}
+          style={{ width: "100%", paddingHorizontal: 16 }}
+          renderItem={({ item }) => <SittingDetails sittingDetails={item} />}
+        />
+      )}
       <TouchableOpacity
         onPress={() => {
           router.push("/sittingHistory");

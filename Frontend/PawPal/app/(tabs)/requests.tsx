@@ -1,43 +1,75 @@
 import { Colors } from "@/constants/Colors";
-import { FlatList, Text, View, StyleSheet } from "react-native";
-import { SittingProfile } from "./schedule";
+import {
+  FlatList,
+  Text,
+  View,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
+import { Booking } from "./schedule";
 import { SittingDetails } from "@/components/ui/SittingDetails";
+import { useEffect, useState } from "react";
+import { IconSymbol } from "@/components/ui/IconSymbol";
 
 export default function Requests() {
-  const sittingProfiles: SittingProfile[] = [
-    {
-      name: "John Doe",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-      date: "01/10/2023",
-      time: "10:00",
-      location: "Str. Republicii 81",
-    },
-    {
-      name: "John Doe",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-      date: "01/10/2023",
-      time: "10:00",
-      location: "Str. Republicii 81",
-    },
-  ];
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [location, setLocation] = useState<string>("");
+  const [currentDate, _] = useState(new Date());
+  const [isLoading, setIsLoading] = useState(false);
 
-  const urgentSittingProfiles: SittingProfile[] = [
-    {
-      name: "John Doe",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-      date: "01/10/2023",
-      time: "10:00",
-      location: "Str. Republicii 81",
-    },
-  ];
+  const [urgentSittings, setUrgentSittings] = useState<Booking[]>([]);
+  useEffect(() => {
+    setUrgentSittings(
+      bookings.filter((booking) => {
+        return (
+          new Date(booking.startDate).getDate() - currentDate.getDate() <= 2
+        );
+      })
+    );
+  }, [bookings]);
   return (
     <View style={styles.mainContainer}>
-      <Text style={styles.titleStyle}>Wow, you're so pawpular!</Text>
-      {urgentSittingProfiles.length > 0 && (
+      <Text style={styles.titleStyle}>Pets in need!</Text>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+      >
+        <TextInput
+          style={styles.input}
+          onChangeText={setLocation}
+          value={location}
+          placeholder="Search by location"
+        />
+        <TouchableOpacity
+          onPress={() => {
+            setIsLoading(true);
+            const API_URL = process.env.EXPO_PUBLIC_API_URL;
+            fetch(
+              API_URL + "/Booking/getAvailableBookingsByLocation/" + location
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                setBookings(data ?? []);
+                setIsLoading(false);
+              })
+              .catch((error) => {
+                console.error("Error fetching bookings:", error);
+              });
+          }}
+        >
+          <IconSymbol name="search" color={Colors.light.text} size={24} />
+        </TouchableOpacity>
+      </View>
+
+      {urgentSittings.length > 0 && (
         <View style={{ flexDirection: "column", width: "100%" }}>
           <Text style={styles.headingStyle}>Someone is in a hurry!</Text>
           <FlatList
-            data={urgentSittingProfiles}
+            data={urgentSittings}
             style={{ width: "100%", padding: 16 }}
             renderItem={({ item }) => (
               <SittingDetails sittingDetails={item} isUrgent={true} />
@@ -53,20 +85,27 @@ export default function Requests() {
           />
         </View>
       )}
-
-      {sittingProfiles.length > 0 ? (
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : bookings.length > 0 ? (
         <View
           style={{ flexDirection: "column", width: "100%", paddingTop: 16 }}
         >
-          <Text style={styles.headingStyle}>Pets interested in you</Text>
+          <Text style={styles.headingStyle}>Pets looking for a sitting</Text>
           <FlatList
-            data={sittingProfiles}
+            data={bookings}
             style={{ width: "100%", paddingHorizontal: 16 }}
-            renderItem={({ item }) => <SittingDetails sittingDetails={item} />}
+            renderItem={({ item }) => (
+              <SittingDetails
+                sittingDetails={item}
+                canBook={true}
+                bookingId={item.id}
+              />
+            )}
           />
         </View>
       ) : (
-        <Text style={styles.headingStyle}>No requests yet</Text>
+        <Text style={styles.headingStyle}>No requests found!</Text>
       )}
     </View>
   );
@@ -79,6 +118,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     paddingVertical: 24,
+    gap: 8,
   },
   titleStyle: {
     fontSize: 24,
@@ -86,12 +126,20 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontStyle: "italic",
     fontFamily: "Inter-Regular",
-    paddingVertical: 24,
+    paddingVertical: 16,
   },
   headingStyle: {
     fontSize: 16,
     color: Colors.light.text,
     fontFamily: "Inter-Regular",
     paddingHorizontal: 24,
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+    width: "80%",
+    borderRadius: 8,
   },
 });

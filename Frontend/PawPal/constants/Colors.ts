@@ -38,4 +38,8 @@ export const Colors = {
     StarColor: "#7EA046",
     BorderColor: "#5C6B2D",
   },
+  InfoSquare: {
+    BackgroundColor: "#FFF7EF",
+    BorderColor: "#F78A1C",
+  },
 };

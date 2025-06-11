@@ -25,16 +25,12 @@ export default function TabLayout() {
         tabBarButton: HapticTab,
         headerLeft: () => (
           <TouchableOpacity
+            style={{ paddingLeft: 16 }}
             onPress={() => {
               router.push("/");
             }}
           >
-            <IconSymbol
-              name="pawicon"
-              style={{ paddingLeft: 16 }}
-              color={Colors.mainColor}
-              size={30}
-            />
+            <IconSymbol name="pawicon" color={Colors.mainColor} size={30} />
           </TouchableOpacity>
         ),
         headerRight: () => (

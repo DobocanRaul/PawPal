@@ -1,19 +1,26 @@
-import { SittingProfile } from "@/app/(tabs)/schedule";
+import { Booking, SittingProfile } from "@/app/(tabs)/schedule";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { Styles } from "@/constants/Styles";
 import { Colors } from "@/constants/Colors";
 import { IconSymbol } from "./IconSymbol";
+import { useNavigation } from "@react-navigation/native";
+import { router } from "expo-router";
 
 type SittingDetailsProps = {
-  sittingDetails: SittingProfile;
+  sittingDetails: Booking;
   isUrgent?: boolean;
+  canBook?: boolean;
+  bookingId?: string; // Optional bookingId, default is empty string
 };
 
 export function SittingDetails({
   sittingDetails,
   isUrgent,
+  canBook = false,
+  bookingId = "", // Optional bookingId, default is empty string
 }: SittingDetailsProps) {
-  const { name, image, date, time, location } = sittingDetails;
+  const { id, pet, startDate, address, endDate } = sittingDetails;
+
   const textColor = isUrgent ? Colors.urgentTextColor : Colors.iconSecondary;
   const backgroundColor = isUrgent
     ? Colors.urgentColor
@@ -34,11 +41,12 @@ export function SittingDetails({
     >
       <Image
         source={{
-          uri: image,
+          uri: "data:image/jpeg;base64," + pet.image,
         }}
         style={{
           height: 100,
           width: 100,
+          borderRadius: 16,
         }}
       />
       <View
@@ -57,7 +65,7 @@ export function SittingDetails({
               { color: textColor, fontWeight: "bold" },
             ]}
           >
-            {name}
+            {pet.name}
           </Text>
           <Text
             style={[
@@ -65,7 +73,7 @@ export function SittingDetails({
               Styles.specificFontFamily,
             ]}
           >
-            {date + " at " + time}
+            {"from " + startDate + " to " + endDate}
           </Text>
         </View>
         <View
@@ -83,11 +91,22 @@ export function SittingDetails({
                 Styles.specificFontFamily,
               ]}
             >
-              {location}
+              {address}
             </Text>
           </View>
           <View style={{ alignItems: "flex-end", padding: 8 }}>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                router.push({
+                  pathname: "/petProfile/[petId]",
+                  params: {
+                    petId: pet.id,
+                    canBook: canBook == true ? "true" : "false",
+                    bookingId: bookingId,
+                  },
+                });
+              }}
+            >
               <Text
                 style={{
                   color: isUrgent ? Colors.urgentTextColor : Colors.mainColor,

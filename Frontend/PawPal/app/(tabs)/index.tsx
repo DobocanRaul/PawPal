@@ -1,7 +1,5 @@
-import { Image, StyleSheet, Platform } from "react-native";
+import { StyleSheet } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
-import { ProfileDetails } from "@/components/ui/ProfileDetails";
-
 export default function HomeScreen() {
   return (
     <ThemedView

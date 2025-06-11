@@ -43,6 +43,13 @@ export default function RootLayout() {
           name="sittingHistory"
           options={{ navigationBarHidden: true, headerShown: false }}
         />
+        <Stack.Screen
+          name="petProfile/[petId]"
+          options={{
+            navigationBarHidden: true,
+            headerTitle: "",
+          }}
+        />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />
