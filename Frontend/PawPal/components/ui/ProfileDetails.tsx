@@ -5,17 +5,23 @@ import StarRating from "react-native-star-rating-widget";
 import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
 import { TagSquare } from "./TagSquare";
 import { Colors } from "@/constants/Colors";
-import { UserProfile } from "@/app/profile";
-
+import { UserProfile } from "@/app/profile/[userId]";
+import * as SecureStorage from "expo-secure-store";
 type ProfileDetailsProps = {
   profile: UserProfile;
 };
 
 export function ProfileDetails(props: ProfileDetailsProps) {
   const { profile } = props;
+  const userId = SecureStorage.getItem("userId");
+  let isCurrentUser = false;
+  if (profile.id.toLowerCase() === userId?.toLowerCase()) {
+    isCurrentUser = true;
+  }
+
   return (
     <GestureHandlerRootView>
-      <HeaderComponent />
+      <HeaderComponent isOwnProfile={isCurrentUser} />
       <View
         style={{
           flex: 1,

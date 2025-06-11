@@ -12,15 +12,24 @@ import { Booking } from "./schedule";
 import { SittingDetails } from "@/components/ui/SittingDetails";
 import { useEffect, useState } from "react";
 import { IconSymbol } from "@/components/ui/IconSymbol";
+import * as SecureStorage from "expo-secure-store";
+import { UserProfile } from "../profile/[userId]";
+import { BookingRequestCard } from "@/components/ui/BookingRequestCard";
+
+export type BookingRequest = {
+  booking: Booking;
+  sitter: UserProfile;
+};
 
 export default function Requests() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [location, setLocation] = useState<string>("");
   const [currentDate, _] = useState(new Date());
   const [isLoading, setIsLoading] = useState(false);
-
+  const [bookingRequests, setBookingRequests] = useState<BookingRequest[]>([]);
   const [urgentSittings, setUrgentSittings] = useState<Booking[]>([]);
   useEffect(() => {
+    const userId = SecureStorage.getItem("userId");
     setUrgentSittings(
       bookings.filter((booking) => {
         return (
@@ -28,6 +37,17 @@ export default function Requests() {
         );
       })
     );
+
+    fetch(
+      process.env.EXPO_PUBLIC_API_URL +
+        "/BookingRequest/GetActiveRequests/" +
+        userId
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setBookingRequests(data ?? []);
+        setIsLoading(false);
+      });
   }, [bookings]);
   return (
     <View style={styles.mainContainer}>
@@ -46,6 +66,10 @@ export default function Requests() {
         />
         <TouchableOpacity
           onPress={() => {
+            if (location == "") {
+              setBookings([]);
+              return;
+            }
             setIsLoading(true);
             const API_URL = process.env.EXPO_PUBLIC_API_URL;
             fetch(
@@ -107,6 +131,26 @@ export default function Requests() {
       ) : (
         <Text style={styles.headingStyle}>No requests found!</Text>
       )}
+      <View
+        style={{
+          borderBottomColor: "#ccc",
+          borderBottomWidth: 1,
+          marginVertical: 10,
+        }}
+      />
+      <Text style={[styles.titleStyle, { paddingHorizontal: 16 }]}>
+        Sitting requests for your pets
+      </Text>
+      <View>
+        <FlatList
+          data={bookingRequests}
+          style={{ width: "100%", paddingHorizontal: 16 }}
+          renderItem={({ item }) => (
+            <BookingRequestCard booking={item.booking} user={item.sitter} />
+          )}
+          keyExtractor={(item) => item.booking.id + item.sitter.id}
+        />
+      </View>
     </View>
   );
 }

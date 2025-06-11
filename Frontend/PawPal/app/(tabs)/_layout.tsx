@@ -8,6 +8,7 @@ import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { ProfileButton } from "@/components/ui/ProfileButton";
 import { TouchableOpacity } from "react-native";
+import * as SecureStorage from "expo-secure-store";
 
 export default function TabLayout() {
   const iconSize = 28;
@@ -36,7 +37,12 @@ export default function TabLayout() {
         headerRight: () => (
           <ProfileButton
             onPress={() => {
-              router.push("/profile");
+              router.push({
+                pathname: "/profile/[userId]",
+                params: {
+                  userId: SecureStorage.getItem("userId"),
+                },
+              });
             }}
           />
         ),

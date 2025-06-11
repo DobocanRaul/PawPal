@@ -3,8 +3,10 @@ import { ProfileDetails } from "@/components/ui/ProfileDetails";
 import { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
 import * as S from "expo-secure-store";
+import { useLocalSearchParams } from "expo-router";
 
 export type UserProfile = {
+  id: string;
   name: string;
   rating: number;
   image: string;
@@ -17,8 +19,8 @@ export default function profile() {
   const [profileDetails, setProfileDetails] = useState<UserProfile | null>(
     null
   );
+  const userId = useLocalSearchParams().userId as string;
   useEffect(() => {
-    const userId = S.getItem("userId");
     const API_URL = process.env.EXPO_PUBLIC_API_URL;
     fetch(`${API_URL}/User/GetUser/${userId}`)
       .then((response) => {

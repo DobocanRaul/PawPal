@@ -33,6 +33,8 @@ export const Colors = {
   borderColor: "#D7B8FF",
   urgentColor: "#FFEFF5",
   urgentTextColor: "#FF4545",
+  AcceptButtonColor: "#04AA6D",
+  RejectButtonColor: "#f44336",
   SittingHistoryCard: {
     BackgroundColor: "#F9FFEF",
     StarColor: "#7EA046",
