@@ -38,7 +38,6 @@ export default function addPetPage() {
     name: string;
     type: string;
   } | null>(null);
-  console.log(image);
   const uploadPet = async () => {
     if (!image) {
       console.error("Image is required.");
@@ -63,11 +62,9 @@ export default function addPetPage() {
       name: image.name,
       type: "image/jpeg",
     } as any);
-    console.log(formData);
 
     try {
       const url = API_URL + "/Pet/CreatePet";
-      console.log(url);
       const response = await fetch(url, {
         method: "POST",
         body: formData,
@@ -77,7 +74,6 @@ export default function addPetPage() {
         const errorText = await response.text();
         console.error("Failed to upload pet:", errorText);
       } else {
-        console.log("Pet uploaded successfully!");
         router.push("/");
       }
     } catch (error) {
