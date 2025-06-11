@@ -13,6 +13,7 @@ import { StyleSheet } from "react-native";
 import { Styles } from "@/constants/Styles";
 import { Colors } from "@/constants/Colors";
 import { Pet } from "@/app/(tabs)/schedule";
+import * as SecureStorage from "expo-secure-store";
 
 type DetailedPetViewProps = {
   petDetails: Pet;
@@ -25,9 +26,6 @@ function createBookingRequest(
   sitterId: string,
   API_URL: string
 ) {
-  console.log("Creating booking request for bookingId:", bookingId);
-  console.log("Sitter ID:", sitterId);
-  console.log("API URL:", API_URL);
   const router = require("expo-router").router;
   fetch(`${API_URL}/BookingRequest/AddRequest`, {
     method: "POST",
@@ -53,7 +51,7 @@ export function DetailedPetView({
   bookingId = "", // Optional bookingId, default is empty string
 }: DetailedPetViewProps) {
   const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000"; // Fallback URL for local development
-  const UserID = "00b16e73-9649-44a6-bb17-902dab8150c2";
+  const UserID = SecureStorage.getItem("userId") || "defaultUserId"; // Fallback for user ID
   return (
     <GestureHandlerRootView>
       <ScrollView

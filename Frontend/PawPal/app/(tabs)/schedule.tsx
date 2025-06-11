@@ -10,6 +10,7 @@ import {
   FlatList,
   ActivityIndicator,
 } from "react-native";
+import * as SecureStorage from "expo-secure-store";
 
 export type SittingProfile = {
   id: string;
@@ -47,7 +48,7 @@ export type Booking = {
 
 export default function TabTwoScreen() {
   const router = useRouter();
-  const userId = "7CE73F01-2DE0-45CF-866A-E66F583880CB";
+  const userId = SecureStorage.getItem("userId");
   const API_URL = process.env.EXPO_PUBLIC_API_URL;
   const [isLoading, setIsLoading] = useState(true);
   const [sittingProfiles, setSittingProfiles] = useState<Booking[]>([]);
