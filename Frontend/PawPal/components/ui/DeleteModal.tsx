@@ -18,6 +18,47 @@ type DeleteModalProps = {
   endDate: string;
 };
 
+type DeletePetModalProps = {
+  visible: boolean;
+  onClose: () => void;
+  onConfirmDelete: () => void;
+  petName: string;
+};
+
+export const DeletePetModal = (prop: DeletePetModalProps) => {
+  const { visible, onClose, onConfirmDelete, petName } = prop;
+  return (
+    <Modal
+      transparent
+      animationType="fade"
+      visible={visible}
+      onRequestClose={onClose}
+    >
+      <View style={styles.overlay}>
+        <View style={styles.modalContainer}>
+          <Text style={styles.title}>Delete booking</Text>
+          <Text style={styles.message}>
+            Are you sure you want to delete{" "}
+            <Text style={{ fontWeight: "bold" }}>{petName}</Text>?
+          </Text>
+
+          <View style={styles.buttonRow}>
+            <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
+              <Text style={styles.cancelText}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.confirmButton}
+              onPress={onConfirmDelete}
+            >
+              <Text style={styles.confirmText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
 export const DeleteBookingModal = (prop: DeleteModalProps) => {
   const { visible, onClose, onConfirmDelete, startDate, endDate, petName } =
     prop;

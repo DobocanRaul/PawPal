@@ -14,6 +14,10 @@ import { Styles } from "@/constants/Styles";
 import { Colors } from "@/constants/Colors";
 import { Pet } from "@/app/(tabs)/schedule";
 import * as SecureStorage from "expo-secure-store";
+import { useCallback, useState } from "react";
+import { router } from "expo-router";
+import Toast from "react-native-toast-message";
+import { DeletePetModal } from "./DeleteModal";
 
 type DetailedPetViewProps = {
   petDetails: Pet;
@@ -38,7 +42,7 @@ function createBookingRequest(
     }),
   })
     .finally(() => {
-      router.push("/(tabs)/requests"); // Navigate to requests page after creating booking request
+      router.push("/(tabs)/requests");
     })
     .catch((error) => {
       console.error("Error creating booking request:", error);
@@ -48,10 +52,35 @@ function createBookingRequest(
 export function DetailedPetView({
   petDetails,
   canBook = false,
-  bookingId = "", // Optional bookingId, default is empty string
+  bookingId = "",
 }: DetailedPetViewProps) {
-  const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000"; // Fallback URL for local development
-  const UserID = SecureStorage.getItem("userId") || "defaultUserId"; // Fallback for user ID
+  const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000";
+  const UserID = SecureStorage.getItem("userId") || "defaultUserId";
+  const [visible, setVisibility] = useState<boolean>(false);
+
+  const deletePet = useCallback(() => {
+    const triggerRequest = async function () {
+      const url = API_URL + "/Pet/DeletePet/" + petDetails.id;
+      fetch(url, {
+        method: "DELETE",
+      }).then((response) => {
+        if (response.status != 200)
+          Toast.show({
+            type: "error",
+            text1: "Something went wrong!",
+          });
+        else {
+          router.push("/(tabs)");
+          Toast.show({
+            type: "success",
+            text1: "The pet has been deleted succesfully",
+          });
+        }
+      });
+    };
+    triggerRequest();
+  }, []);
+
   return (
     <GestureHandlerRootView>
       <ScrollView
@@ -59,7 +88,7 @@ export function DetailedPetView({
           flexDirection: "column",
           paddingHorizontal: 24,
           gap: 12,
-          paddingBottom: canBook ? 100 : 24,
+          paddingBottom: canBook || UserID === petDetails.ownerId ? 100 : 24,
         }}
       >
         <Image
@@ -140,6 +169,39 @@ export function DetailedPetView({
           </Text>
         </TouchableOpacity>
       ) : null}
+      {petDetails.ownerId === UserID ? (
+        <TouchableOpacity
+          style={{
+            backgroundColor: Colors.urgentTextColor,
+            padding: 12,
+            borderRadius: 8,
+            alignItems: "center",
+            position: "absolute",
+            width: "90%",
+            //center the button at the bottom
+            bottom: 15,
+            left: "5%",
+          }}
+          onPress={() => setVisibility(true)}
+        >
+          <Text
+            style={{
+              color: Colors.light.background,
+              fontSize: 22,
+              fontFamily: "Inter-Regular",
+              fontWeight: "bold",
+            }}
+          >
+            Delete pet!
+          </Text>
+        </TouchableOpacity>
+      ) : null}
+      <DeletePetModal
+        visible={visible}
+        petName={petDetails.name}
+        onClose={() => setVisibility(false)}
+        onConfirmDelete={deletePet}
+      />
     </GestureHandlerRootView>
   );
 }
