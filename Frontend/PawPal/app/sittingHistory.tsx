@@ -1,34 +1,56 @@
 import { BackButton } from "@/components/ui/BackButton";
-import { ProfileButton } from "@/components/ui/ProfileButton";
 import { Styles } from "@/constants/Styles";
 import { useRouter } from "expo-router";
-import { View, Text, FlatList } from "react-native";
-import { SittingHistoryCard } from "@/components/ui/SittingHistoryCard";
+import {
+  View,
+  Text,
+  FlatList,
+  ActivityIndicator,
+  StyleSheet,
+} from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useState } from "react";
+import { Booking } from "./(tabs)/schedule";
+import * as SecureStorage from "expo-secure-store";
+import { SittingDetails } from "@/components/ui/SittingDetails";
+import { Colors } from "@/constants/Colors";
 
-export type SittingHistoryInfo = {
-  name: string;
-  image: string;
-  date: Date;
-  rating: number;
-};
 export default function SittingHistory() {
   const router = useRouter();
-  const sittingHistory: SittingHistoryInfo[] = [
-    {
-      name: "John Doe",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-      date: new Date(),
-      rating: 4.5,
-    },
-    {
-      name: "John Doe",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-      date: new Date(),
-      rating: 3.5,
-    },
-  ];
+  const [historyAsSitter, setHistoryAsSitter] = useState<Booking[]>([]);
+  const [historyAsOwner, setHistoryAsOwner] = useState<Booking[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const API_URL = process.env.EXPO_PUBLIC_API_URL;
+  const [userId, setUserId] = useState<string>(
+    SecureStorage.getItem("userId") || ""
+  );
+  useFocusEffect(
+    useCallback(() => {
+      const asOwnerUrl = API_URL + "/Booking/getOwnerSittingHistory/" + userId;
+      const asSitterUrl =
+        API_URL + "/Booking/getSitterSittingHistory/" + userId;
+      const fetchSittingHistory = async () => {
+        try {
+          const [ownerResponse, sitterResponse] = await Promise.all([
+            fetch(asOwnerUrl),
+            fetch(asSitterUrl),
+          ]);
 
-  sittingHistory[1].date.setMonth(10);
+          const ownerData = await ownerResponse.json();
+          const sitterData = await sitterResponse.json();
+
+          setHistoryAsOwner(ownerData);
+          setHistoryAsSitter(sitterData);
+        } catch (error) {
+          console.error("Error fetching sitting history:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchSittingHistory();
+    }, [])
+  );
   return (
     <View
       style={{
@@ -40,11 +62,6 @@ export default function SittingHistory() {
     >
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <BackButton />
-        <ProfileButton
-          onPress={() => {
-            router.push("/profile");
-          }}
-        />
       </View>
       <View style={{ paddingTop: 30, flexDirection: "column" }}>
         <Text
@@ -56,11 +73,52 @@ export default function SittingHistory() {
         >
           You were a great {"\n"} temporary pawrent for them!
         </Text>
-        <FlatList
-          data={sittingHistory}
-          renderItem={({ item }) => <SittingHistoryCard sittingInfo={item} />}
-        />
+        {!isLoading ? (
+          <View>
+            <Text style={styles.titleStyle}>Sitting history as owner:</Text>
+            {historyAsOwner.length != 0 ? (
+              <FlatList
+                data={historyAsOwner}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                  <SittingDetails sittingDetails={item} />
+                )}
+              />
+            ) : (
+              <Text style={{ fontSize: 16, color: Colors.light.text }}>
+                Oops! You have no sitting history as a sitter.
+              </Text>
+            )}
+            <Text style={styles.titleStyle}>Sitting history as sitter:</Text>
+            {historyAsSitter.length != 0 ? (
+              <FlatList
+                data={historyAsSitter}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                  <SittingDetails sittingDetails={item} />
+                )}
+              />
+            ) : (
+              <Text style={{ fontSize: 16, color: Colors.light.text }}>
+                Oops! You have no sitting history as a sitter.
+              </Text>
+            )}
+          </View>
+        ) : (
+          <ActivityIndicator />
+        )}
       </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  titleStyle: {
+    fontSize: 24,
+    color: Colors.light.text,
+    fontWeight: "bold",
+    fontStyle: "italic",
+    fontFamily: "Inter-Regular",
+    paddingVertical: 24,
+  },
+});

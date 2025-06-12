@@ -10,25 +10,49 @@ import {
 } from "react-native";
 import { Booking } from "./schedule";
 import { SittingDetails } from "@/components/ui/SittingDetails";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { IconSymbol } from "@/components/ui/IconSymbol";
+import * as SecureStorage from "expo-secure-store";
+import { UserProfile } from "../profile/[userId]";
+import { BookingRequestCard } from "@/components/ui/BookingRequestCard";
+import { useFocusEffect } from "expo-router";
+
+export type BookingRequest = {
+  booking: Booking;
+  sitter: UserProfile;
+};
 
 export default function Requests() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [location, setLocation] = useState<string>("");
   const [currentDate, _] = useState(new Date());
   const [isLoading, setIsLoading] = useState(false);
-
+  const [bookingRequests, setBookingRequests] = useState<BookingRequest[]>([]);
   const [urgentSittings, setUrgentSittings] = useState<Booking[]>([]);
-  useEffect(() => {
-    setUrgentSittings(
-      bookings.filter((booking) => {
-        return (
-          new Date(booking.startDate).getDate() - currentDate.getDate() <= 2
-        );
-      })
-    );
-  }, [bookings]);
+  const [trigger, setTrigger] = useState(false);
+  const userId = SecureStorage.getItem("userId");
+  useFocusEffect(
+    useCallback(() => {
+      setUrgentSittings(
+        bookings.filter((booking) => {
+          return (
+            new Date(booking.startDate).getDate() - currentDate.getDate() <= 2
+          );
+        })
+      );
+
+      fetch(
+        process.env.EXPO_PUBLIC_API_URL +
+          "/BookingRequest/GetActiveRequests/" +
+          userId
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          setBookingRequests(data ?? []);
+          setIsLoading(false);
+        });
+    }, [bookings, trigger])
+  );
   return (
     <View style={styles.mainContainer}>
       <Text style={styles.titleStyle}>Pets in need!</Text>
@@ -46,10 +70,18 @@ export default function Requests() {
         />
         <TouchableOpacity
           onPress={() => {
+            if (location == "") {
+              setBookings([]);
+              return;
+            }
             setIsLoading(true);
             const API_URL = process.env.EXPO_PUBLIC_API_URL;
             fetch(
-              API_URL + "/Booking/getAvailableBookingsByLocation/" + location
+              API_URL +
+                "/Booking/getAvailableBookingsByLocation/" +
+                location +
+                "/" +
+                userId
             )
               .then((response) => response.json())
               .then((data) => {
@@ -72,7 +104,12 @@ export default function Requests() {
             data={urgentSittings}
             style={{ width: "100%", padding: 16 }}
             renderItem={({ item }) => (
-              <SittingDetails sittingDetails={item} isUrgent={true} />
+              <SittingDetails
+                sittingDetails={item}
+                isUrgent={true}
+                canBook={true}
+                bookingId={item.id}
+              />
             )}
           />
           <View
@@ -107,6 +144,30 @@ export default function Requests() {
       ) : (
         <Text style={styles.headingStyle}>No requests found!</Text>
       )}
+      <View
+        style={{
+          borderBottomColor: "#ccc",
+          borderBottomWidth: 1,
+          marginVertical: 10,
+        }}
+      />
+      <Text style={[styles.titleStyle, { paddingHorizontal: 16 }]}>
+        Sitting requests for your pets
+      </Text>
+      <View>
+        <FlatList
+          data={bookingRequests}
+          style={{ width: "100%", paddingHorizontal: 16 }}
+          renderItem={({ item }) => (
+            <BookingRequestCard
+              booking={item.booking}
+              user={item.sitter}
+              refresh={() => setTrigger((prev) => !prev)}
+            />
+          )}
+          keyExtractor={(item) => item.booking.id + item.sitter.id}
+        />
+      </View>
     </View>
   );
 }

@@ -19,11 +19,13 @@ export function SittingDetails({
   canBook = false,
   bookingId = "", // Optional bookingId, default is empty string
 }: SittingDetailsProps) {
-  const { id, pet, startDate, address, endDate } = sittingDetails;
+  const { pet, startDate, address, endDate, userId, user } = sittingDetails;
 
   const textColor = isUrgent ? Colors.urgentTextColor : Colors.iconSecondary;
   const backgroundColor = isUrgent
     ? Colors.urgentColor
+    : userId != null
+    ? Colors.AcceptButtonColor
     : Colors.cardBackgroundColor;
   const borderColor = isUrgent ? Colors.urgentTextColor : Colors.mainColor;
   return (
@@ -75,6 +77,18 @@ export function SittingDetails({
           >
             {"from " + startDate + " to " + endDate}
           </Text>
+          {userId != null ? (
+            <Text>
+              <Text
+                style={[
+                  { fontSize: 12, color: textColor },
+                  Styles.specificFontFamily,
+                ]}
+              >
+                Booked by {user.name}
+              </Text>
+            </Text>
+          ) : null}
         </View>
         <View
           style={{

@@ -5,31 +5,23 @@ import StarRating from "react-native-star-rating-widget";
 import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
 import { TagSquare } from "./TagSquare";
 import { Colors } from "@/constants/Colors";
-type Profile = {
-  id: string;
-  name: string;
-  rating: number;
-  bestWith: Array<string>;
-  availability: string;
-  descriptionTags: Array<string>;
+import { UserProfile } from "@/app/profile/[userId]";
+import * as SecureStorage from "expo-secure-store";
+type ProfileDetailsProps = {
+  profile: UserProfile;
 };
 
-export function ProfileDetails() {
-  const rating = 4.5;
-  const name: string = "John Doe";
-  const BestWithTags = ["Dog", "Cat", "Bird"];
-  const AvailabilityTags = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
-  const DescriptionTags = ["Smoker", "Empath"];
+export function ProfileDetails(props: ProfileDetailsProps) {
+  const { profile } = props;
+  const userId = SecureStorage.getItem("userId");
+  let isCurrentUser = false;
+  if (profile.id.toLowerCase() === userId?.toLowerCase()) {
+    isCurrentUser = true;
+  }
+
   return (
     <GestureHandlerRootView>
-      <HeaderComponent />
+      <HeaderComponent isOwnProfile={isCurrentUser} />
       <View
         style={{
           flex: 1,
@@ -40,7 +32,7 @@ export function ProfileDetails() {
       >
         <Image
           source={{
-            uri: "https://reactnative.dev/img/tiny_logo.png",
+            uri: "data:image/jpeg;base64," + profile.image,
           }}
           style={{
             height: 300,
@@ -61,10 +53,10 @@ export function ProfileDetails() {
               Styles.boldFont,
             ]}
           >
-            {name}
+            {profile.name}
           </Text>
           <StarRating
-            rating={rating}
+            rating={profile.rating}
             maxStars={5}
             starSize={24}
             color={Colors.mainColor}
@@ -83,7 +75,7 @@ export function ProfileDetails() {
               I'm best with
             </Text>
             <FlatList
-              data={BestWithTags}
+              data={profile.bestWithTags}
               horizontal={true}
               showsHorizontalScrollIndicator={false}
               renderItem={({ item }) => (
@@ -96,7 +88,7 @@ export function ProfileDetails() {
               I'm available on
             </Text>
             <FlatList
-              data={AvailabilityTags}
+              data={profile.availabilityTags}
               horizontal={true}
               showsHorizontalScrollIndicator={false}
               renderItem={({ item }) => (
@@ -109,7 +101,7 @@ export function ProfileDetails() {
               Me in a nutshell
             </Text>
             <FlatList
-              data={DescriptionTags}
+              data={profile.descriptionTags}
               horizontal={true}
               renderItem={({ item }) => (
                 <TagSquare displayText={item} iconName="fingerprintIcon" />

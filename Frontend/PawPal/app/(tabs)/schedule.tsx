@@ -1,7 +1,7 @@
 import { SittingDetails } from "@/components/ui/SittingDetails";
 import { Colors } from "@/constants/Colors";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,6 +10,9 @@ import {
   FlatList,
   ActivityIndicator,
 } from "react-native";
+import * as SecureStorage from "expo-secure-store";
+import { UserProfile } from "../profile/[userId]";
+import { useFocusEffect } from "@react-navigation/native";
 
 export type SittingProfile = {
   id: string;
@@ -31,7 +34,7 @@ export type Pet = {
   image: string; // base64 string or image URL depending on your backend
   tags: string[];
   ownerId: string;
-  owner: null | any; // refine this if you model `User`
+  owner: UserProfile; // refine this if you model `User`
 };
 
 export type Booking = {
@@ -40,6 +43,7 @@ export type Booking = {
   petId: string;
   pet: Pet;
   userId: string;
+  user: UserProfile;
   startDate: string; // ISO date string
   endDate: string;
   address: string;
@@ -47,34 +51,41 @@ export type Booking = {
 
 export default function TabTwoScreen() {
   const router = useRouter();
-  const userId = "7CE73F01-2DE0-45CF-866A-E66F583880CB";
+  const userId = SecureStorage.getItem("userId");
   const API_URL = process.env.EXPO_PUBLIC_API_URL;
   const [isLoading, setIsLoading] = useState(true);
   const [sittingProfiles, setSittingProfiles] = useState<Booking[]>([]);
   const [sittingRequests, setSittingRequests] = useState<Booking[]>([]);
-  useEffect(() => {
-    const sittingsUrl = API_URL + "/Booking/getSitterBookings/" + userId;
-    fetch(sittingsUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        setSittingProfiles(data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching sitting profiles:", error);
-        setIsLoading(false);
-      });
-    fetch(API_URL + "/Booking/getUserBookings/" + userId)
-      .then((response) => response.json())
-      .then((data) => {
-        setSittingRequests(data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching sitting requests:", error);
-        setIsLoading(false);
-      });
-  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      setIsLoading(true);
+
+      const sittingsUrl = API_URL + "/Booking/getSitterBookings/" + userId;
+      const userBookingsUrl = API_URL + "/Booking/getUserBookings/" + userId;
+
+      const fetchData = async () => {
+        try {
+          const [sittingsRes, requestsRes] = await Promise.all([
+            fetch(sittingsUrl),
+            fetch(userBookingsUrl),
+          ]);
+
+          const sittingsData = await sittingsRes.json();
+          const requestsData = await requestsRes.json();
+
+          setSittingProfiles(sittingsData);
+          setSittingRequests(requestsData);
+        } catch (error) {
+          console.error("Error fetching bookings:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchData();
+    }, [userId])
+  );
 
   return (
     <View style={styles.mainContainer}>

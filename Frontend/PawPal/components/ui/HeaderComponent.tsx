@@ -2,7 +2,12 @@ import { View, Text, Button, TouchableOpacity } from "react-native";
 import { IconSymbol } from "./IconSymbol";
 import { useNavigation } from "expo-router";
 import { BackButton } from "./BackButton";
-export function HeaderComponent() {
+
+type HeaderComponentProps = {
+  isOwnProfile?: boolean;
+};
+export function HeaderComponent(props: HeaderComponentProps) {
+  const { isOwnProfile } = props;
   const navigation = useNavigation();
   return (
     <View style={{ paddingTop: 16 }}>
@@ -16,9 +21,11 @@ export function HeaderComponent() {
         }}
       >
         <BackButton />
-        <TouchableOpacity onPress={() => {}}>
-          <IconSymbol name="settingsIcon" size={24} color="black" />
-        </TouchableOpacity>
+        {isOwnProfile ? (
+          <TouchableOpacity onPress={() => {}}>
+            <IconSymbol name="settingsIcon" size={24} color="black" />
+          </TouchableOpacity>
+        ) : null}
       </View>
     </View>
   );
