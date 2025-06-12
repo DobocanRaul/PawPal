@@ -129,8 +129,6 @@ export default function signup() {
       const API_URL = process.env.EXPO_PUBLIC_API_URL;
       const url = `${API_URL}/Auth/register`;
 
-      console.log(url);
-
       const response = await fetch(url, {
         method: "POST",
         body: formData,
@@ -221,6 +219,7 @@ export default function signup() {
                     placeholder="Confirm your Email"
                   />
                   <Text style={styles.label}>Password</Text>
+
                   <View style={{ position: "relative" }}>
                     <TextInput
                       style={[styles.input, { paddingRight: 40 }]}
@@ -241,6 +240,10 @@ export default function signup() {
                       <IconSymbol name="eye" color={Colors.labelTextColor} />
                     </TouchableOpacity>
                   </View>
+                  <Text style={[styles.label, { fontWeight: "100" }]}>
+                    Password has to have at least:
+                    {"\n"}- one nonalphanumeric character(special character)
+                  </Text>
                   <Text style={styles.label}>Confirm Password</Text>
                   <View style={{ position: "relative" }}>
                     <TextInput
@@ -430,7 +433,11 @@ export default function signup() {
                   <Text style={styles.label}>Show us what you look like!</Text>
                   <TouchableOpacity onPress={pickImage}>
                     {image?.uri ? (
-                      <Image source={{ uri: image.uri }} style={styles.image} />
+                      <Image
+                        source={{ uri: image.uri }}
+                        style={styles.image}
+                        resizeMode="contain"
+                      />
                     ) : (
                       <View
                         style={[
@@ -455,18 +462,17 @@ export default function signup() {
                   alignItems: "center",
                 }}
               >
-                {page > 1 ? (
-                  <TouchableOpacity
-                    style={styles.buttonStyling}
-                    onPress={() =>
-                      setPage((prev) => (prev > 1 ? prev - 1 : prev))
-                    }
-                  >
-                    <Text style={styles.buttonText}>Prev</Text>
-                  </TouchableOpacity>
-                ) : (
-                  <View></View>
-                )}
+                <TouchableOpacity
+                  style={styles.buttonStyling}
+                  onPress={() => {
+                    page == 1
+                      ? router.replace("/(auth)")
+                      : setPage((prev) => (prev > 1 ? prev - 1 : prev));
+                  }}
+                >
+                  <Text style={styles.buttonText}>Back</Text>
+                </TouchableOpacity>
+
                 {page < 3 ? (
                   <TouchableOpacity
                     style={styles.buttonStyling}
@@ -509,7 +515,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-    marginTop: 10,
+    marginVertical: 10,
+    justifyContent: "center",
   },
   tagItem: {
     backgroundColor: Colors.mainColor,
@@ -539,7 +546,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 300,
-    height: 200,
+    height: 300,
     alignSelf: "center",
     marginBottom: 30,
   },
@@ -556,7 +563,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 12,
     fontSize: 16,
-    marginBottom: 16,
     marginHorizontal: 20,
   },
   button: {

@@ -37,13 +37,18 @@ export function SittingDetails({
   const deleteBooking = useCallback(() => {
     const API_URL = process.env.EXPO_PUBLIC_API_URL;
     const url = API_URL + "/Booking/DeleteBooking/" + id;
-    console.log(url);
     fetch(url, {
       method: "DELETE",
     })
       .then((response) => {
-        if (response.status != 204) throw new Error("Something went wrong!");
         setModalVisibility(false);
+        if (response.status == 400) {
+          Toast.show({
+            type: "error",
+            text1: "Sitting already booked!",
+          });
+          return;
+        }
         router.replace("/(tabs)");
         Toast.show({
           type: "success",
