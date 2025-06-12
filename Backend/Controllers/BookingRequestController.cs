@@ -26,6 +26,7 @@ public class BookingRequestController : ControllerBase
         List<BookingRequest> bookingRequests = await _context.BookingRequests
             .Include(br => br.Sitter)
             .Include(br => br.Booking)
+            .Include(br => br.Booking.Pet)
             .Where(br => br.Booking.OwnerId == ownerId && br.status == "Pending" )
             .ToListAsync();
 
@@ -78,6 +79,15 @@ public class BookingRequestController : ControllerBase
                 return NotFound("Booking not found for the accepted request.");
             }
             booking.UserId = resolveRequest.SitterId; // Assign the sitter to the booking
+            List<BookingRequest> bookingRequests = await _context.BookingRequests
+                .Where(br => br.BookingId == resolveRequest.BookingId && br.SitterId != resolveRequest.SitterId)
+                .ToListAsync();
+            foreach (var request in bookingRequests)
+            {
+                request.status = "Rejected"; // Reject all other requests for the same booking
+                _context.BookingRequests.Update(request);
+            }
+
             _context.Bookings.Update(booking);
         }
         await _context.SaveChangesAsync();

@@ -24,7 +24,7 @@ public class BookingController : ControllerBase
     [HttpGet("getBooking/{bookingId}")]
     public async Task<IActionResult> GetBooking([FromRoute] Guid bookingId)
     {
-        Booking booking = await _context.Bookings.Include(b => b.Pet).FirstOrDefaultAsync(b => b.Id == bookingId);
+        Booking booking = await _context.Bookings.Include(b => b.Pet).Include(b =>b.User).FirstOrDefaultAsync(b => b.Id == bookingId);
         if (booking == null)
         {
             return NotFound(new { Message = "Booking not found." });
@@ -40,7 +40,8 @@ public class BookingController : ControllerBase
     {
         List<Booking> bookings = await _context.Bookings
             .Include(b => b.Pet)
-            .Where(b => b.OwnerId == userId)
+            .Include(b => b.User)
+            .Where(b => b.OwnerId == userId && b.StartDate> DateOnly.FromDateTime(DateTime.Now))
             .ToListAsync();
         if (bookings == null || !bookings.Any())
         {
@@ -56,6 +57,7 @@ public class BookingController : ControllerBase
     {
         List<Booking> bookings = await _context.Bookings
             .Include(b => b.Pet)
+            .Include(b => b.User)
             .Where(b => b.UserId == sitterId && b.StartDate >= DateOnly.FromDateTime(DateTime.Today))
             .ToListAsync();
         if (bookings == null || !bookings.Any())
@@ -67,22 +69,23 @@ public class BookingController : ControllerBase
     }
 
 
-    [HttpGet("getAvailableBookingsByLocation/{cityName}")]
-    public async Task<IActionResult> GetAvailableBookingsByLocation([FromRoute] string cityName)
+    [HttpGet("getAvailableBookingsByLocation/{cityName}/{userId}")]
+    public async Task<IActionResult> GetAvailableBookingsByLocation([FromRoute] string cityName, [FromRoute]Guid userId)
     {
         List<Booking> bookings = await _context.Bookings
             .Include(b => b.Pet)
-            .Where(b => b.Address.Contains(", " + cityName) && b.UserId == null && b.StartDate >= DateOnly.FromDateTime(DateTime.Today))
+            .Where(b => b.Address.Contains(", " + cityName)&& b.OwnerId != userId && b.UserId == null && b.StartDate > DateOnly.FromDateTime(DateTime.Today))
             .ToListAsync();
         return Ok(bookings);
     }
 
-    [HttpGet("getSittingHistory /{sitterId}")]
-    public async Task<IActionResult> GetSittingHistory([FromRoute] Guid sitterId)
+    [HttpGet("getSitterSittingHistory/{sitterId}")]
+    public async Task<IActionResult> GetSitterSittingHistory([FromRoute] Guid sitterId)
     { 
         List<Booking> bookings = await _context.Bookings
             .Include(b => b.Pet)
-            .Where(b => b.UserId == sitterId && b.EndDate < DateOnly.FromDateTime(DateTime.Today))
+            .Include(b => b.User)
+            .Where(b => b.UserId == sitterId && b.StartDate <= DateOnly.FromDateTime(DateTime.Today))
             .ToListAsync();
 
         return Ok(bookings);
@@ -107,6 +110,19 @@ public class BookingController : ControllerBase
         return Ok(new { Message = "Sitter assigned successfully." });
     }
 
+    [HttpGet("getOwnerSittingHistory/{ownerId}")]
+    public async Task<IActionResult> GetOwnerSittingHistory([FromRoute]Guid ownerId)
+    {
+        List<Booking> bookings = await _context.Bookings
+            .Include(b => b.Pet)
+            .Include(b => b.User)
+            .Where(b => b.StartDate <= DateOnly.FromDateTime(DateTime.Today) && b.OwnerId==ownerId)
+            .ToListAsync();
+
+        List<BookingDto> bookingDtos = _mapper.Map<List<BookingDto>>(bookings);
+        return Ok(bookingDtos);
+    }
+
     [HttpPost("createBooking")]
     public async Task<IActionResult> CreateBooking([FromBody] CreateBookingDto booking)
     {
@@ -114,14 +130,29 @@ public class BookingController : ControllerBase
         {
             return BadRequest(new { Message = "Invalid booking data." });
         }
-
-        Booking newBooking = _mapper.Map<Booking>(booking);
-        newBooking.Id = Guid.NewGuid();
         Pet pet = await _context.Pets.FirstOrDefaultAsync(p => p.Id == booking.PetId);
         if (pet ==null)
         {
             return BadRequest(new { Message = "No valid pet found for the booking." });
         }
+
+        try
+        {
+            DateOnly startDate = DateOnly.Parse(booking.StartDate);
+            DateOnly endDate = DateOnly.Parse(booking.EndDate);
+            Booking existingBooking = await _context.Bookings.FirstOrDefaultAsync(p => p.PetId == booking.PetId && startDate == p.StartDate && p.EndDate == endDate);
+            if (existingBooking != null) {
+                return BadRequest(new { Message = "Request for the same date already exists" });
+
+            }
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = "Date format invalid" });
+        }
+            
+        Booking newBooking = _mapper.Map<Booking>(booking);
+        newBooking.Id = Guid.NewGuid();
         newBooking.Pet = pet;
         newBooking.OwnerId =newBooking.Pet.OwnerId;
         newBooking.Address = newBooking.Pet.Address;
