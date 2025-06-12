@@ -16,7 +16,7 @@ const MAPPING = {
   "paperplane.fill": "send",
   "chevron.left.forwardslash.chevron.right": "code",
   "chevron.right": "chevron-right",
-  settingsIcon: "settings",
+  logout: "logout",
   "arrow-back-ios": "arrow-back-ios",
   pawicon: "pets",
   fingerprintIcon: "fingerprint",

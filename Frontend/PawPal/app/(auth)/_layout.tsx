@@ -8,14 +8,14 @@ export default function AuthLayout() {
   useEffect(() => {
     const checkAuth = async () => {
       const userId = await SecureStore.getItemAsync("userId");
-      if (userId) {
+      if (userId != null) {
         router.replace("/(tabs)"); // if logged in, redirect away
       } else {
         setIsLoggedIn(false); // allow rendering
       }
     };
     checkAuth();
-  }, []);
+  }, [isLoggedIn]);
 
   if (isLoggedIn === null) return null;
   return <Stack screenOptions={{ headerShown: false }} />;

@@ -21,7 +21,6 @@ export default function RootLayout() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const router = useRouter();
   const pathname = usePathname();
-
   useEffect(() => {
     const checkLogin = async () => {
       const userId = await SecureStorage.getItemAsync("userId");
@@ -41,7 +40,7 @@ export default function RootLayout() {
     if (isLoggedIn && pathname === "/") {
       router.replace("/(tabs)");
     }
-  }, [isLoggedIn, isReady, pathname]);
+  }, [isLoggedIn, isReady]);
 
   if (!isReady) return null;
   return (

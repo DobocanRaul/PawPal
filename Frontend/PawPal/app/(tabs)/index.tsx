@@ -25,9 +25,8 @@ export default function HomeScreen() {
   const [API_URL, setAPi] = useState<string>(
     process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000"
   );
-  const [userId, setUser] = useState<string>(
-    SecureStore.getItem("userId") || ""
-  );
+  const userId = SecureStore.getItem("userId");
+  userId;
   useFocusEffect(
     useCallback(() => {
       const getPets = async function () {

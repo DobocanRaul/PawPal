@@ -39,7 +39,11 @@ export default function LoginPage() {
           },
           body: body,
         })
-          .then((response) => response.json())
+          .then((response) => {
+            if (response.status != 200) {
+              throw new Error("Credentials not ok!");
+            } else return response.json();
+          })
           .then((data) => {
             SecureStorage.setItemAsync("userId", data.userId);
             SecureStorage.setItemAsync("token", data.token);
@@ -51,7 +55,7 @@ export default function LoginPage() {
     };
 
     goLogin();
-  }, []);
+  }, [email, password]);
 
   return (
     <SafeAreaView style={styles.safeArea}>

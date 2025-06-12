@@ -1,7 +1,9 @@
 import { View, Text, Button, TouchableOpacity } from "react-native";
 import { IconSymbol } from "./IconSymbol";
-import { useNavigation } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import { BackButton } from "./BackButton";
+import * as SecureStore from "expo-secure-store";
+import { useCallback } from "react";
 
 type HeaderComponentProps = {
   isOwnProfile?: boolean;
@@ -9,6 +11,14 @@ type HeaderComponentProps = {
 export function HeaderComponent(props: HeaderComponentProps) {
   const { isOwnProfile } = props;
   const navigation = useNavigation();
+
+  const logout = useCallback(() => {
+    const goLogout = async function () {
+      await SecureStore.deleteItemAsync("userId");
+      router.replace("/(auth)");
+    };
+    goLogout();
+  }, []);
   return (
     <View style={{ paddingTop: 16 }}>
       <View
@@ -22,8 +32,8 @@ export function HeaderComponent(props: HeaderComponentProps) {
       >
         <BackButton />
         {isOwnProfile ? (
-          <TouchableOpacity onPress={() => {}}>
-            <IconSymbol name="settingsIcon" size={24} color="black" />
+          <TouchableOpacity onPress={logout}>
+            <IconSymbol name="logout" size={24} color="black" />
           </TouchableOpacity>
         ) : null}
       </View>
