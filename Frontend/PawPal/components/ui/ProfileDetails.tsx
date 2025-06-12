@@ -55,14 +55,14 @@ export function ProfileDetails(props: ProfileDetailsProps) {
           >
             {profile.name}
           </Text>
-          <StarRating
+          {/* <StarRating
             rating={profile.rating}
             maxStars={5}
             starSize={24}
             color={Colors.mainColor}
             starStyle={{ marginHorizontal: 0 }}
             onChange={(_) => {}}
-          />
+          /> */}
         </View>
         <View
           style={{

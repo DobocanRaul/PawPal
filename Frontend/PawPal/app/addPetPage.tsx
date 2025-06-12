@@ -9,6 +9,11 @@ import {
   TextInput,
   Switch,
   Image,
+  ScrollView,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  SafeAreaView,
+  Keyboard,
 } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
@@ -127,178 +132,221 @@ export default function AddPetPage() {
   }, []);
 
   return (
-    <View style={styles.container}>
-      {page === 1 ? (
-        <View>
-          <Text style={styles.sectionTitle}>
-            We start with some basic questions! 😁
-          </Text>
-          <Text style={styles.label}>What is its name?</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Insert Name"
-            value={petName}
-            onChangeText={setPetName}
-          />
-          <Text style={styles.label}>What is it?</Text>
-          <View style={styles.switchRow}>
-            <Text>Boy</Text>
-            <Switch
-              value={isFemale}
-              onValueChange={setIsFemale}
-              thumbColor={isFemale ? "#FF69B4" : "#2196F3"}
-              trackColor={{ false: "#d3d3d3", true: "#f8b6d2" }}
-            />
-            <Text>Girl</Text>
-          </View>
-          <Text style={styles.label}>What is its age?</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Insert age"
-            value={age.toString()}
-            onChangeText={(text) => setAge(text)}
-            keyboardType="numeric"
-          />
-          <Text style={styles.label}>Is it a big one? 😊</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Insert weight"
-            value={weight.toString()}
-            onChangeText={(text) => setWeight(text)}
-            keyboardType="numeric"
-          />
-          <View style={{ flexDirection: "row", justifyContent: "center" }}>
-            {!isFemale ? (
-              <Image
-                source={require("../assets/images/Boy.png")}
-                style={{ width: 200, height: 200, alignSelf: "flex-end" }}
-                resizeMode="contain"
-              />
-            ) : (
-              <View style={{ width: 200, height: 200 }}></View>
-            )}
+    <SafeAreaView style={styles.safeArea}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAvoidingView style={styles.container}>
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            <View style={styles.container}>
+              {page === 1 ? (
+                <View>
+                  <Text style={styles.sectionTitle}>
+                    We start with some basic questions! 😁
+                  </Text>
+                  <Text style={styles.label}>What is its name?</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Insert Name"
+                    value={petName}
+                    onChangeText={setPetName}
+                  />
+                  <Text style={styles.label}>What is it?</Text>
+                  <View style={styles.switchRow}>
+                    <Text>Boy</Text>
+                    <Switch
+                      value={isFemale}
+                      onValueChange={setIsFemale}
+                      thumbColor={isFemale ? "#FF69B4" : "#2196F3"}
+                      trackColor={{ false: "#d3d3d3", true: "#f8b6d2" }}
+                    />
+                    <Text>Girl</Text>
+                  </View>
+                  <Text style={styles.label}>What is its age?</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Insert age"
+                    value={age.toString()}
+                    onChangeText={(text) => setAge(text)}
+                    keyboardType="numeric"
+                  />
+                  <Text style={styles.label}>Is it a big one? 😊</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Insert weight"
+                    value={weight.toString()}
+                    onChangeText={(text) => setWeight(text)}
+                    keyboardType="numeric"
+                  />
+                  <View
+                    style={{ flexDirection: "row", justifyContent: "center" }}
+                  >
+                    {!isFemale ? (
+                      <Image
+                        source={require("../assets/images/Boy.png")}
+                        style={{
+                          width: 200,
+                          height: 200,
+                          alignSelf: "flex-end",
+                        }}
+                        resizeMode="contain"
+                      />
+                    ) : (
+                      <View style={{ width: 200, height: 200 }}></View>
+                    )}
 
-            {!isFemale ? (
-              <View style={{ width: 200, height: 200 }}></View>
-            ) : (
-              <Image
-                source={require("../assets/images/Girl.png")}
-                style={{ width: 200, height: 200, alignSelf: "flex-end" }}
-                resizeMode="contain"
-              />
-            )}
-          </View>
-        </View>
-      ) : (
-        <GestureHandlerRootView>
-          <View>
-            <Text style={styles.sectionTitle}>
-              Can't forget about the details! 😅
-            </Text>
-            <Text style={styles.label}>Tell us what people should know</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Here goes the description"
-              value={description}
-              onChangeText={setDescription}
-            />
-            <Text style={styles.label}>Where is its home?</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="The city"
-              value={city}
-              onChangeText={setCity}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="The street"
-              value={street}
-              onChangeText={setStreet}
-            />
-            <Text style={styles.label}>We need a picture of them too!</Text>
-            <TouchableOpacity onPress={pickImage}>
-              {image?.uri ? (
-                <Image source={{ uri: image.uri }} style={styles.image} />
-              ) : (
-                <View
-                  style={[
-                    styles.image,
-                    {
-                      backgroundColor: "#eee",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    },
-                  ]}
-                >
-                  <Text>Select an image</Text>
+                    {!isFemale ? (
+                      <View style={{ width: 200, height: 200 }}></View>
+                    ) : (
+                      <Image
+                        source={require("../assets/images/Girl.png")}
+                        style={{
+                          width: 200,
+                          height: 200,
+                          alignSelf: "flex-end",
+                        }}
+                        resizeMode="contain"
+                      />
+                    )}
+                  </View>
                 </View>
+              ) : (
+                <GestureHandlerRootView>
+                  <View>
+                    <Text style={styles.sectionTitle}>
+                      Can't forget about the details! 😅
+                    </Text>
+                    <Text style={styles.label}>
+                      Tell us what people should know
+                    </Text>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Here goes the description"
+                      value={description}
+                      onChangeText={setDescription}
+                    />
+                    <Text style={styles.label}>Where is its home?</Text>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="The city"
+                      value={city}
+                      onChangeText={setCity}
+                    />
+                    <TextInput
+                      style={styles.input}
+                      placeholder="The street"
+                      value={street}
+                      onChangeText={setStreet}
+                    />
+                    <Text style={styles.label}>
+                      We need a picture of them too!
+                    </Text>
+                    <TouchableOpacity onPress={pickImage}>
+                      {image?.uri ? (
+                        <Image
+                          source={{ uri: image.uri }}
+                          style={styles.image}
+                        />
+                      ) : (
+                        <View
+                          style={[
+                            styles.image,
+                            {
+                              backgroundColor: "#eee",
+                              justifyContent: "center",
+                              alignItems: "center",
+                            },
+                          ]}
+                        >
+                          <Text>Select an image</Text>
+                        </View>
+                      )}
+                    </TouchableOpacity>
+                    <Text style={styles.label}>
+                      Lastly, add some special tags!
+                    </Text>
+                    <View style={styles.tagInputRow}>
+                      <TextInput
+                        style={[styles.input, { flex: 1 }]}
+                        placeholder="Type something"
+                        value={currentTag}
+                        onChangeText={setCurrentTag}
+                      />
+                      <Button
+                        title="Add"
+                        onPress={() => {
+                          if (currentTag.length) {
+                            setTags((prev) => [...prev, currentTag]);
+                            setCurrentTag("");
+                          }
+                        }}
+                        color={Colors.mainColor}
+                      />
+                    </View>
+                    <FlatList
+                      data={tags}
+                      keyExtractor={(tag) => tag}
+                      horizontal
+                      renderItem={({ item }) => (
+                        <TouchableOpacity
+                          onPress={() =>
+                            setTags((prev) => prev.filter((tag) => tag != item))
+                          }
+                        >
+                          <Text style={styles.tagItem}>{item}</Text>
+                        </TouchableOpacity>
+                      )}
+                      style={{ marginTop: 10 }}
+                    />
+                  </View>
+                </GestureHandlerRootView>
               )}
-            </TouchableOpacity>
-            <Text style={styles.label}>Lastly, add some special tags!</Text>
-            <View style={styles.tagInputRow}>
-              <TextInput
-                style={[styles.input, { flex: 1 }]}
-                placeholder="Type something"
-                value={currentTag}
-                onChangeText={setCurrentTag}
-              />
-              <Button
-                title="Add"
-                onPress={() => {
-                  if (currentTag.length) {
-                    setTags((prev) => [...prev, currentTag]);
-                    setCurrentTag("");
-                  }
-                }}
-              />
+              <View style={styles.navButtons}>
+                {page > 1 ? (
+                  <TouchableOpacity
+                    onPress={() => setPage((prev) => prev - 1)}
+                    style={styles.buttonStyling}
+                  >
+                    <Text style={styles.buttonText}>Back</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <View />
+                )}
+                {page < 2 ? (
+                  <TouchableOpacity
+                    style={styles.buttonStyling}
+                    onPress={() => setPage((prev) => prev + 1)}
+                  >
+                    <Text style={styles.buttonText}>Next</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={styles.buttonStyling}
+                    onPress={uploadPet}
+                  >
+                    <Text style={styles.buttonText}>Add</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
-            <FlatList
-              data={tags}
-              keyExtractor={(tag) => tag}
-              horizontal
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  onPress={() =>
-                    setTags((prev) => prev.filter((tag) => tag != item))
-                  }
-                >
-                  <Text style={styles.tagItem}>{item}</Text>
-                </TouchableOpacity>
-              )}
-              style={{ marginTop: 10 }}
-            />
-          </View>
-        </GestureHandlerRootView>
-      )}
-      <View style={styles.navButtons}>
-        {page > 1 ? (
-          <TouchableOpacity
-            onPress={() => setPage((prev) => prev - 1)}
-            style={styles.buttonStyling}
-          >
-            <Text style={styles.buttonText}>Back</Text>
-          </TouchableOpacity>
-        ) : (
-          <View />
-        )}
-        {page < 2 ? (
-          <TouchableOpacity
-            style={styles.buttonStyling}
-            onPress={() => setPage((prev) => prev + 1)}
-          >
-            <Text style={styles.buttonText}>Next</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={styles.buttonStyling} onPress={uploadPet}>
-            <Text style={styles.buttonText}>Add</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: Colors.light.background,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: "center",
+  },
   container: {
     backgroundColor: Colors.light.background,
     justifyContent: "space-between",

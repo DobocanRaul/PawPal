@@ -18,5 +18,12 @@ export default function AuthLayout() {
   }, [isLoggedIn]);
 
   if (isLoggedIn === null) return null;
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen
+        name="signup"
+        options={{ headerShown: true, headerTitle: "" }}
+      />
+    </Stack>
+  );
 }

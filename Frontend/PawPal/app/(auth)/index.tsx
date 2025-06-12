@@ -62,6 +62,7 @@ export default function LoginPage() {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <KeyboardAvoidingView style={styles.container}>
           <ScrollView
+            showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
             keyboardShouldPersistTaps="handled"
           >
@@ -100,7 +101,7 @@ export default function LoginPage() {
                 <IconSymbol name="eye" color={Colors.labelTextColor} />
               </TouchableOpacity>
             </View>
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
               <Text
                 style={[
                   styles.label,
@@ -113,7 +114,7 @@ export default function LoginPage() {
               >
                 Forgot password?
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity style={styles.button} onPress={login}>
               <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
@@ -122,7 +123,11 @@ export default function LoginPage() {
 
             <View style={styles.signupRow}>
               <Text style={styles.label}>Don't have an account?</Text>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  router.push("/(auth)/signup");
+                }}
+              >
                 <Text style={styles.link}>Sign up</Text>
               </TouchableOpacity>
             </View>
@@ -136,7 +141,7 @@ export default function LoginPage() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.light.background, // make sure this is pure white
+    backgroundColor: Colors.light.background,
   },
   container: {
     flex: 1,
