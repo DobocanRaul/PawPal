@@ -40,7 +40,7 @@ export default function TabLayout() {
               router.push({
                 pathname: "/profile/[userId]",
                 params: {
-                  userId: SecureStorage.getItem("userId"),
+                  userId: SecureStorage.getItem("userId") || "",
                 },
               });
             }}

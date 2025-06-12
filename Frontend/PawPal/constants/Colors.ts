@@ -26,7 +26,9 @@ export const Colors = {
     secondaryColor: "#e2a5f0",
   },
   mainColor: "#9747FF",
+  linkTextColor: "#0000FF",
   iconSecondary: "#000000",
+  textBox: "#EEEEEE",
   background: "#fff",
   mainColorInactive: "#c397fc",
   cardBackgroundColor: "#F8F1FF",
@@ -35,6 +37,7 @@ export const Colors = {
   urgentTextColor: "#FF4545",
   AcceptButtonColor: "#04AA6D",
   RejectButtonColor: "#f44336",
+  labelTextColor: "#281945",
   SittingHistoryCard: {
     BackgroundColor: "#F9FFEF",
     StarColor: "#7EA046",

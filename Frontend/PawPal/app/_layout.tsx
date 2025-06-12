@@ -4,12 +4,13 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Stack, usePathname, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "react-native-reanimated";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import * as SecureStorage from "expo-secure-store";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -20,19 +21,39 @@ export default function RootLayout() {
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
+  const [isReady, setIsReady] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  const router = useRouter();
+  const pathname = usePathname();
+
   useEffect(() => {
-    if (loaded) {
+    const checkLogin = async () => {
+      const userId = await SecureStorage.getItemAsync("userId");
+      setIsLoggedIn(!!userId);
+      setIsReady(true);
       SplashScreen.hideAsync();
-    }
+    };
+    if (loaded) checkLogin();
   }, [loaded]);
 
-  if (!loaded) {
+  if (!isReady) return null;
+
+  // Redirect if not logged in and not already on login page
+  if (!isLoggedIn && !pathname.startsWith("/(auth)")) {
+    router.replace("/(auth)");
     return null;
   }
 
   return (
     <ThemeProvider value={DefaultTheme}>
       <Stack>
+        <Stack.Screen
+          name="(auth)"
+          options={{
+            navigationBarHidden: true,
+            headerShown: false,
+          }}
+        />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
           name="profile/[userId]"

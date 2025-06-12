@@ -20,7 +20,6 @@ import {
 import { HomeCardPet } from "@/components/ui/HomeCardPet";
 import { router } from "expo-router";
 export default function HomeScreen() {
-  SecureStore.setItem("userId", "48163B87-EC9F-4825-858B-D27C78869C41");
   const [pets, setPets] = useState<Pet[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [API_URL, setAPi] = useState<string>(
