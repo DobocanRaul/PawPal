@@ -68,7 +68,7 @@ export default function LoginPage() {
             <Text style={styles.welcomeText}>Welcome!</Text>
 
             <Image
-              source={require("../../assets/images/Group79.png")}
+              source={require("../../assets/images/LoginGroup.png")}
               style={styles.image}
             />
 

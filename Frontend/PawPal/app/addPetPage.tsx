@@ -10,24 +10,20 @@ import {
   Switch,
   Image,
 } from "react-native";
-import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
-import {
-  FlatList,
-  GestureHandlerRootView,
-  NativeViewGestureHandler,
-} from "react-native-gesture-handler";
-import { NativeGesture } from "react-native-gesture-handler/lib/typescript/handlers/gestures/nativeGesture";
+import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
 import * as SecureStorage from "expo-secure-store";
 import { router } from "expo-router";
-export default function addPetPage() {
+import Toast from "react-native-toast-message";
+
+export default function AddPetPage() {
   const [page, setPage] = useState<number>(1);
   const [petName, setPetName] = useState<string>("");
   const [isFemale, setIsFemale] = useState<boolean>(false);
   const [street, setStreet] = useState<string>("");
   const [city, setCity] = useState<string>("");
-  const [age, setAge] = useState<number>(0);
-  const [weight, setWeight] = useState<number>(0.0);
+  const [age, setAge] = useState<string>("");
+  const [weight, setWeight] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [tags, setTags] = useState<string[]>([]);
   const [currentTag, setCurrentTag] = useState<string>("");
@@ -38,25 +34,57 @@ export default function addPetPage() {
     name: string;
     type: string;
   } | null>(null);
+
   const uploadPet = async () => {
     if (!image) {
-      console.error("Image is required.");
+      Toast.show({
+        type: "error",
+        text1: "Image is required",
+      });
       return;
+    }
+    if (tags.length < 2) {
+      Toast.show({
+        type: "error",
+        text1: "Add at least 2 tags",
+      });
+    }
+    if (!petName) {
+      Toast.show({
+        type: "error",
+        text1: "Name is required",
+      });
+      return;
+    }
+
+    if (!street || !city) {
+      Toast.show({
+        type: "error",
+        text1: "Address is required",
+      });
+      return;
+    }
+
+    try {
+      Number.parseFloat(age);
+      Number.parseFloat(weight);
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Age or weight are not a number",
+      });
     }
 
     const formData = new FormData();
 
-    formData.append("Name", petName); // 'Name'
-    formData.append("OwnerId", userId || ""); // 'OwnerId'
-    formData.append("Address", `Str ${street}, ${city}`); // 'Address'
-    formData.append("IsFemale", isFemale.toString()); // 'IsFemale'
-    formData.append("Weight", weight.toString()); // 'Weight'
-    formData.append("Description", description); // 'Description'
-    formData.append("Age", age.toString()); // 'Age'
-
-    tags.forEach((tag) => formData.append("Tags", tag)); // 'Tags=string'
-
-    // Image
+    formData.append("Name", petName);
+    formData.append("OwnerId", userId || "");
+    formData.append("Address", `Str ${street}, ${city}`);
+    formData.append("IsFemale", isFemale.toString());
+    formData.append("Weight", weight.toString());
+    formData.append("Description", description);
+    formData.append("Age", age.toString());
+    tags.forEach((tag) => formData.append("Tags", tag));
     formData.append("Image", {
       uri: image.uri,
       name: image.name,
@@ -99,30 +127,21 @@ export default function addPetPage() {
   }, []);
 
   return (
-    <View
-      style={{
-        backgroundColor: Colors.light.background,
-        justifyContent: "space-between",
-        flex: 1,
-      }}
-    >
+    <View style={styles.container}>
       {page === 1 ? (
         <View>
-          <Text>We start with some basic questions! 😁</Text>
-          <Text>What is it's name?</Text>
+          <Text style={styles.sectionTitle}>
+            We start with some basic questions! 😁
+          </Text>
+          <Text style={styles.label}>What is its name?</Text>
           <TextInput
+            style={styles.input}
             placeholder="Insert Name"
             value={petName}
             onChangeText={setPetName}
           />
-          <Text>What is it?</Text>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+          <Text style={styles.label}>What is it?</Text>
+          <View style={styles.switchRow}>
             <Text>Boy</Text>
             <Switch
               value={isFemale}
@@ -132,117 +151,140 @@ export default function addPetPage() {
             />
             <Text>Girl</Text>
           </View>
-          <Text>What is it's age?</Text>
+          <Text style={styles.label}>What is its age?</Text>
           <TextInput
+            style={styles.input}
             placeholder="Insert age"
             value={age.toString()}
-            onChangeText={(text) => setAge(Number(text))}
+            onChangeText={(text) => setAge(text)}
             keyboardType="numeric"
           />
-          <Text>Is it a big one ? 😊</Text>
+          <Text style={styles.label}>Is it a big one? 😊</Text>
           <TextInput
+            style={styles.input}
             placeholder="Insert weight"
             value={weight.toString()}
-            onChangeText={(text) => setWeight(Number(text))}
+            onChangeText={(text) => setWeight(text)}
             keyboardType="numeric"
           />
+          <View style={{ flexDirection: "row", justifyContent: "center" }}>
+            {!isFemale ? (
+              <Image
+                source={require("../assets/images/Boy.png")}
+                style={{ width: 200, height: 200, alignSelf: "flex-end" }}
+                resizeMode="contain"
+              />
+            ) : (
+              <View style={{ width: 200, height: 200 }}></View>
+            )}
+
+            {!isFemale ? (
+              <View style={{ width: 200, height: 200 }}></View>
+            ) : (
+              <Image
+                source={require("../assets/images/Girl.png")}
+                style={{ width: 200, height: 200, alignSelf: "flex-end" }}
+                resizeMode="contain"
+              />
+            )}
+          </View>
         </View>
       ) : (
         <GestureHandlerRootView>
           <View>
-            <Text>Can't forget about the details!😅</Text>
-            <Text>Tell us what the people should know about it!</Text>
+            <Text style={styles.sectionTitle}>
+              Can't forget about the details! 😅
+            </Text>
+            <Text style={styles.label}>Tell us what people should know</Text>
             <TextInput
+              style={styles.input}
               placeholder="Here goes the description"
               value={description}
               onChangeText={setDescription}
             />
-            <Text>Where is it's home?</Text>
+            <Text style={styles.label}>Where is its home?</Text>
             <TextInput
+              style={styles.input}
               placeholder="The city"
               value={city}
               onChangeText={setCity}
             />
             <TextInput
+              style={styles.input}
               placeholder="The street"
               value={street}
               onChangeText={setStreet}
             />
-            <Text>We need a picture of his also!</Text>
+            <Text style={styles.label}>We need a picture of them too!</Text>
             <TouchableOpacity onPress={pickImage}>
-              <Image
-                source={{
-                  uri: image?.uri,
-                }}
-                style={{
-                  width: 100,
-                  height: 100,
-                  borderWidth: 1,
-                  borderRadius: 8,
+              {image?.uri ? (
+                <Image source={{ uri: image.uri }} style={styles.image} />
+              ) : (
+                <View
+                  style={[
+                    styles.image,
+                    {
+                      backgroundColor: "#eee",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                  ]}
+                >
+                  <Text>Select an image</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+            <Text style={styles.label}>Lastly, add some special tags!</Text>
+            <View style={styles.tagInputRow}>
+              <TextInput
+                style={[styles.input, { flex: 1 }]}
+                placeholder="Type something"
+                value={currentTag}
+                onChangeText={setCurrentTag}
+              />
+              <Button
+                title="Add"
+                onPress={() => {
+                  if (currentTag.length) {
+                    setTags((prev) => [...prev, currentTag]);
+                    setCurrentTag("");
+                  }
                 }}
               />
-            </TouchableOpacity>
-            <Text>Lastly, tell us about the special things!</Text>
-            <TextInput
-              placeholder="Type something"
-              value={currentTag}
-              onChangeText={setCurrentTag}
-            />
-            <Button
-              title="Add tag"
-              onPress={() => {
-                if (currentTag.length) {
-                  setTags((prev) => [...prev, currentTag]);
-                  setCurrentTag("");
-                }
-              }}
-            />
+            </View>
             <FlatList
               data={tags}
               keyExtractor={(tag) => tag}
-              renderItem={({ item }) => <Text>{item}</Text>}
+              horizontal
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  onPress={() =>
+                    setTags((prev) => prev.filter((tag) => tag != item))
+                  }
+                >
+                  <Text style={styles.tagItem}>{item}</Text>
+                </TouchableOpacity>
+              )}
+              style={{ marginTop: 10 }}
             />
           </View>
         </GestureHandlerRootView>
       )}
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-evenly",
-          paddingBottom: 40,
-        }}
-      >
+      <View style={styles.navButtons}>
         {page > 1 ? (
           <TouchableOpacity
-            onPress={() => {
-              if (page !== 1) {
-                setPage((prev) => prev - 1);
-              }
-            }}
-            style={{
-              backgroundColor: Colors.mainColor,
-              width: 75,
-              height: 50,
-              borderRadius: 8,
-              borderWidth: 1,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+            onPress={() => setPage((prev) => prev - 1)}
+            style={styles.buttonStyling}
           >
             <Text style={styles.buttonText}>Back</Text>
           </TouchableOpacity>
         ) : (
-          <View></View>
+          <View />
         )}
-
         {page < 2 ? (
           <TouchableOpacity
             style={styles.buttonStyling}
-            onPress={() => {
-              if (page !== 2) {
-                setPage((prev) => prev + 1);
-              }
-            }}
+            onPress={() => setPage((prev) => prev + 1)}
           >
             <Text style={styles.buttonText}>Next</Text>
           </TouchableOpacity>
@@ -257,6 +299,68 @@ export default function addPetPage() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: Colors.light.background,
+    justifyContent: "space-between",
+    flex: 1,
+    padding: 20,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 12,
+    color: Colors.light.text,
+    backgroundColor: Colors.light.background,
+    borderRadius: 8,
+    height: 40,
+    alignItems: "center",
+  },
+  label: {
+    fontSize: 16,
+    marginTop: 10,
+    fontWeight: "bold",
+    color: Colors.light.text,
+  },
+  input: {
+    backgroundColor: "#f0f0f0",
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    fontSize: 16,
+    marginTop: 6,
+  },
+  switchRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 12,
+    marginVertical: 10,
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginTop: 10,
+  },
+  tagInputRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginTop: 10,
+  },
+  tagItem: {
+    backgroundColor: Colors.mainColor,
+    color: Colors.light.background,
+    padding: 6,
+    borderRadius: 6,
+    marginRight: 6,
+  },
+  navButtons: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    paddingBottom: 40,
+  },
   buttonStyling: {
     backgroundColor: Colors.mainColor,
     width: 75,
