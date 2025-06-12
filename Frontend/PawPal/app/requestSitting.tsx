@@ -84,10 +84,7 @@ export default function RequestSitting() {
           },
           body,
         });
-        console.log(response.status);
-        console.log(typeof response.status);
         if (response.status == 201) {
-          console.log("success")!;
           Toast.show({
             type: "success",
             text1: "Sitting request sent successfully!",
@@ -124,8 +121,10 @@ export default function RequestSitting() {
   };
 
   return (
-    <GestureHandlerRootView>
-      <View style={{ padding: 16 }}>
+    <GestureHandlerRootView
+      style={{ flex: 1, backgroundColor: Colors.light.background }}
+    >
+      <View style={{ padding: 16, backgroundColor: Colors.light.background }}>
         <Text style={styles.header}>Who needs a pawrent?</Text>
 
         {isLoading ? (
@@ -160,7 +159,11 @@ export default function RequestSitting() {
           />
         )}
 
-        <Text style={styles.sectionLabel}>Starting when?</Text>
+        <Text
+          style={[{ paddingVertical: 10 }, styles.sectionLabel, styles.header]}
+        >
+          Starting when?
+        </Text>
         <TouchableOpacity
           onPress={() => setShowStartPicker(true)}
           style={styles.dateButton}
@@ -168,7 +171,11 @@ export default function RequestSitting() {
           <Text style={styles.dateButtonText}>{startDate.toDateString()}</Text>
         </TouchableOpacity>
 
-        <Text style={styles.sectionLabel}>And ending on?</Text>
+        <Text
+          style={[(styles.sectionLabel, styles.header), { paddingTop: 20 }]}
+        >
+          And ending on?
+        </Text>
         <TouchableOpacity
           onPress={() => setShowEndPicker(true)}
           style={styles.dateButton}
@@ -194,7 +201,10 @@ export default function RequestSitting() {
           />
         )}
 
-        <TouchableOpacity style={styles.dateButton} onPress={sendRequest}>
+        <TouchableOpacity
+          style={[styles.dateButton, { marginTop: 80 }]}
+          onPress={sendRequest}
+        >
           <Text style={styles.dateButtonText}>Request a sitting!</Text>
         </TouchableOpacity>
       </View>
@@ -229,7 +239,7 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     fontSize: 16,
-    marginTop: 20,
+    marginVertical: 20,
   },
   dateButton: {
     marginTop: 10,

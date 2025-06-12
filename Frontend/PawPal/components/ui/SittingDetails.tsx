@@ -3,8 +3,11 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 import { Styles } from "@/constants/Styles";
 import { Colors } from "@/constants/Colors";
 import { IconSymbol } from "./IconSymbol";
-import { useNavigation } from "@react-navigation/native";
 import { router } from "expo-router";
+import * as SecureStore from "expo-secure-store";
+import { DeleteBookingModal } from "./DeleteModal";
+import { useCallback, useState } from "react";
+import Toast from "react-native-toast-message";
 
 type SittingDetailsProps = {
   sittingDetails: Booking;
@@ -19,7 +22,10 @@ export function SittingDetails({
   canBook = false,
   bookingId = "", // Optional bookingId, default is empty string
 }: SittingDetailsProps) {
-  const { pet, startDate, address, endDate, userId, user } = sittingDetails;
+  const { pet, startDate, address, endDate, userId, user, ownerId, id } =
+    sittingDetails;
+  const currentUserId = SecureStore.getItem("userId");
+  const [modalVisible, setModalVisibility] = useState<boolean>(false);
 
   const textColor = isUrgent ? Colors.urgentTextColor : Colors.iconSecondary;
   const backgroundColor = isUrgent
@@ -28,6 +34,30 @@ export function SittingDetails({
     ? Colors.AcceptButtonColor
     : Colors.cardBackgroundColor;
   const borderColor = isUrgent ? Colors.urgentTextColor : Colors.mainColor;
+  const deleteBooking = useCallback(() => {
+    const API_URL = process.env.EXPO_PUBLIC_API_URL;
+    const url = API_URL + "/Booking/DeleteBooking/" + id;
+    console.log(url);
+    fetch(url, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (response.status != 204) throw new Error("Something went wrong!");
+        setModalVisibility(false);
+        router.replace("/(tabs)");
+        Toast.show({
+          type: "success",
+          text1: "Deleting the booking was succesfull",
+        });
+      })
+      .catch((error) => {
+        Toast.show({
+          type: "error",
+          text1: error,
+        });
+      });
+  }, []);
+
   return (
     <View
       style={{
@@ -39,6 +69,7 @@ export function SittingDetails({
         marginVertical: 8,
         borderColor: borderColor,
         borderWidth: 1,
+        alignItems: "center",
       }}
     >
       <Image
@@ -108,7 +139,30 @@ export function SittingDetails({
               {address}
             </Text>
           </View>
-          <View style={{ alignItems: "flex-end", padding: 8 }}>
+          <View
+            style={{
+              alignItems: "flex-end",
+              padding: 8,
+              flexDirection: "column",
+              gap: 16,
+            }}
+          >
+            {ownerId === currentUserId ? (
+              <TouchableOpacity
+                onPress={() => {
+                  setModalVisibility(true);
+                }}
+              >
+                <Text
+                  style={{
+                    color: Colors.urgentTextColor,
+                    fontWeight: "bold",
+                  }}
+                >
+                  Delete {">"}
+                </Text>
+              </TouchableOpacity>
+            ) : null}
             <TouchableOpacity
               onPress={() => {
                 router.push({
@@ -133,6 +187,16 @@ export function SittingDetails({
           </View>
         </View>
       </View>
+      <DeleteBookingModal
+        visible={modalVisible}
+        onClose={() => setModalVisibility(false)}
+        onConfirmDelete={() => {
+          deleteBooking();
+        }}
+        petName={pet.name}
+        startDate={startDate}
+        endDate={endDate}
+      />
     </View>
   );
 }

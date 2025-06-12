@@ -13,6 +13,7 @@ import {
 import * as SecureStorage from "expo-secure-store";
 import { UserProfile } from "../profile/[userId]";
 import { useFocusEffect } from "@react-navigation/native";
+import { DeleteBookingModal } from "@/components/ui/DeleteModal";
 
 export type SittingProfile = {
   id: string;
@@ -56,7 +57,6 @@ export default function TabTwoScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [sittingProfiles, setSittingProfiles] = useState<Booking[]>([]);
   const [sittingRequests, setSittingRequests] = useState<Booking[]>([]);
-
   useFocusEffect(
     useCallback(() => {
       setIsLoading(true);
@@ -103,6 +103,7 @@ export default function TabTwoScreen() {
         <FlatList
           data={sittingRequests}
           style={{ width: "100%", paddingHorizontal: 16 }}
+          showsVerticalScrollIndicator={false}
           renderItem={({ item }) => <SittingDetails sittingDetails={item} />}
         />
       )}
@@ -117,6 +118,7 @@ export default function TabTwoScreen() {
         <FlatList
           data={sittingProfiles}
           style={{ width: "100%", paddingHorizontal: 16 }}
+          showsVerticalScrollIndicator={false}
           renderItem={({ item }) => <SittingDetails sittingDetails={item} />}
         />
       )}
@@ -137,7 +139,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     alignItems: "center",
-    paddingVertical: 24,
+    paddingBottom: 24,
   },
   titleStyle: {
     fontSize: 24,
@@ -145,7 +147,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontStyle: "italic",
     fontFamily: "Inter-Regular",
-    paddingVertical: 24,
+    paddingVertical: 16,
   },
   historyText: {
     fontSize: 16,
