@@ -1,6 +1,9 @@
-﻿using Backend___PawPal.DTOs;
+﻿using Backend___PawPal.Context;
+using Backend___PawPal.DTOs;
+using Backend___PawPal.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -12,11 +15,13 @@ public class AuthController : ControllerBase
 {
     private readonly UserManager<IdentityUser> _userManager;
     private readonly IConfiguration _config;
+    private readonly PawPalDbContext _context;
 
-    public AuthController(UserManager<IdentityUser> userManager, IConfiguration config)
+    public AuthController(UserManager<IdentityUser> userManager, IConfiguration config, PawPalDbContext context)
     {
         _userManager = userManager;
         _config = config;
+        _context = context;
     }
 
     [HttpPost("login")]
@@ -42,10 +47,16 @@ public class AuthController : ControllerBase
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
             );
 
+            User userProfile = await _context.Users.FirstOrDefaultAsync(user => user.Email == model.Email);
+
+            if (userProfile == null) { 
+                return NotFound();
+            }
             return Ok(new
             {
                 token = new JwtSecurityTokenHandler().WriteToken(token),
-                expiration = token.ValidTo
+                expiration = token.ValidTo,
+                userId = userProfile.Id,
             });
         }
 

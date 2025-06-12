@@ -46,11 +46,9 @@ public class UserController : ControllerBase
     {
         User user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
 
-        UserDto userDto= new UserDto();
         if (user != null)
         {
-            _mapper.Map(user,userDto);
-            return Ok(userDto);
+            return Ok(user);
         }
 
         return NotFound(new
@@ -63,8 +61,16 @@ public class UserController : ControllerBase
     [HttpPost("CreateUser")]
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> CreateUser([FromForm] UserDto userDto) {
-        User newUser = new User();
+        User newUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == userDto.Email);
 
+        if(newUser != null)
+        {
+            return BadRequest(new
+            {
+                StatusCode = HttpStatusCode.BadRequest,
+                Message = "User with this email already exists"
+            });
+        }
         if (!_validator.Validate(userDto))
         { 
             return BadRequest(
@@ -75,6 +81,7 @@ public class UserController : ControllerBase
                 }
                            );
         }
+        newUser = new User();
         _mapper.Map(userDto, newUser);
         newUser.Id = Guid.NewGuid();
         newUser.Rating = 0;

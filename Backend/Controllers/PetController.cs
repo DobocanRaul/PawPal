@@ -38,15 +38,7 @@ public class PetController : ControllerBase
     [HttpGet("Pets/{userId}")]
     public async Task<IActionResult> GetAllUserPets([FromRoute] Guid userId)
     { 
-        List<Pet> pets= await _context.Pets.Where(pet => pet.Owner.Id == userId).ToListAsync();
-        if (pets.Count == 0)
-        {
-            return BadRequest(new
-            {
-                StatusCode = HttpStatusCode.BadRequest,
-                Message = "No pets found for this user"
-            });
-        }
+        List<Pet> pets= await _context.Pets.Where(pet => pet.OwnerId == userId).ToListAsync();
         return Ok(pets);
 
     }
