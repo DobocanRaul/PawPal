@@ -21,7 +21,6 @@ export function HomeCardPet(props: CardProps) {
         margin: 10,
         alignItems: "center",
         borderColor: Colors.mainColor,
-        backgroundImage: "data:image/jpeg;base64," + pet.image,
       }}
     >
       <TouchableOpacity

@@ -16,10 +16,12 @@ import {
 } from "react-native";
 import * as SecureStorage from "expo-secure-store";
 import { router } from "expo-router";
+import { IconSymbol } from "@/components/ui/IconSymbol";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const login = useCallback(() => {
     const goLogin = async function () {
@@ -74,12 +76,26 @@ export default function LoginPage() {
             />
 
             <Text style={styles.label}>Password</Text>
-            <TextInput
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              style={styles.input}
-            />
+
+            <View style={{ position: "relative" }}>
+              <TextInput
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={!showPassword}
+                style={[styles.input, { paddingRight: 40 }]}
+              />
+              <TouchableOpacity
+                onPress={() => setShowPassword((prev) => !prev)}
+                style={{
+                  position: "absolute",
+                  right: 15,
+                  top: "50%",
+                  transform: [{ translateY: -20 }],
+                }}
+              >
+                <IconSymbol name="eye" color={Colors.labelTextColor} />
+              </TouchableOpacity>
+            </View>
             <TouchableOpacity>
               <Text
                 style={[

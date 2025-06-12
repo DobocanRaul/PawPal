@@ -133,7 +133,9 @@ export default function HomeScreen() {
               borderColor: Colors.light.text,
               borderWidth: 1,
             }}
-            onPress={() => {}}
+            onPress={() => {
+              router.push("/requestSitting");
+            }}
           >
             <Text style={{ color: Colors.light.background, fontSize: 18 }}>
               Request a sitting!

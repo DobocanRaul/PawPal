@@ -23,6 +23,7 @@ const MAPPING = {
   person: "person",
   location: "location-pin",
   search: "search",
+  eye: "remove-red-eye",
 } as Partial<
   Record<
     import("expo-symbols").SymbolViewProps["name"],
