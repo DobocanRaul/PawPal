@@ -10,7 +10,7 @@ using System.Net;
 namespace Backend___PawPal.Controllers;
 
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class UserController : ControllerBase
 {
@@ -23,7 +23,7 @@ public class UserController : ControllerBase
         _context = context ;
         _mapper = mapper ;
     }
-
+        
     [HttpGet("GetUserPhoto/{userId}")]
     public async Task<IActionResult> GetUserPhoto([FromRoute] Guid userId)
     {

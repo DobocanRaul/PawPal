@@ -9,7 +9,7 @@ namespace Backend___PawPal.Controllers;
 
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class BookingRequestController : ControllerBase
 {
     private readonly PawPalDbContext _context;

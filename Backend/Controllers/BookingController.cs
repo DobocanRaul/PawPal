@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace Backend___PawPal.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class BookingController : ControllerBase
 {
@@ -35,6 +35,27 @@ public class BookingController : ControllerBase
         return Ok(bookingDto);
     }
 
+    [HttpGet("GetUsersForBookings/{userId}")]
+    public async Task<IActionResult> GetUsersForBookings([FromRoute] Guid userId)
+    { 
+        List<User> sittersOfbookings= await _context.Bookings
+            .Include(b=>b.User)
+            .Where(b=> b.OwnerId==userId && b.UserId!=null && b.UserId!=userId)
+            .Select(b=>b.User)
+            .ToListAsync();
+
+        List<User> ownersOfBookings = await _context.Bookings
+            .Include(b => b.Owner)
+            .Where(b => b.UserId == userId && b.OwnerId!=userId)
+            .Select(b => b.Owner)
+            .ToListAsync();
+
+        sittersOfbookings.AddRange(ownersOfBookings);
+
+
+        return Ok(sittersOfbookings);
+
+    }
     [HttpGet("getUserBookings/{userId}")]
     public async Task<IActionResult> GetUserBookings([FromRoute] Guid userId)
     {

@@ -10,7 +10,7 @@ using System.Net;
 
 namespace Backend___PawPal.Controllers;
 
-[Route("api/[Controller]")]
+[Route("[Controller]")]
 [ApiController]
 public class PetController : ControllerBase
 

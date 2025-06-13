@@ -16,6 +16,8 @@ public class PawPalDbContext : IdentityDbContext
     public DbSet<Booking> Bookings { get; set; }
     public DbSet<BookingRequest> BookingRequests { get; set; }
 
+    public DbSet<Message> Messages { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
