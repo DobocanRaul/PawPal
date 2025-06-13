@@ -38,6 +38,7 @@ export const Colors = {
   AcceptButtonColor: "#04AA6D",
   RejectButtonColor: "#f44336",
   labelTextColor: "#281945",
+  sittingAccepted: "#90EE90",
   SittingHistoryCard: {
     BackgroundColor: "#F9FFEF",
     StarColor: "#7EA046",

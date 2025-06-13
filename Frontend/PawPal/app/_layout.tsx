@@ -45,7 +45,11 @@ export default function RootLayout() {
   if (!isReady) return null;
   return (
     <ThemeProvider value={DefaultTheme}>
-      <Stack>
+      <Stack
+        screenOptions={{
+          headerShadowVisible: false, // ✅ Removes bottom shadow (iOS)
+        }}
+      >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
           name="(auth)"
@@ -83,6 +87,10 @@ export default function RootLayout() {
             navigationBarHidden: true,
             headerTitle: "",
           }}
+        />
+        <Stack.Screen
+          name="chatPage/[userId]"
+          options={{ headerTitle: "", navigationBarHidden: true }}
         />
       </Stack>
       <StatusBar style="auto" />

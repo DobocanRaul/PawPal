@@ -1,7 +1,7 @@
 import { Booking, SittingProfile } from "@/app/(tabs)/schedule";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import { Styles } from "@/constants/Styles";
-import { Colors } from "@/constants/Colors";
+import { Styles } from "../../constants/Styles";
+import { Colors } from "../../constants/Colors";
 import { IconSymbol } from "./IconSymbol";
 import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
@@ -31,7 +31,7 @@ export function SittingDetails({
   const backgroundColor = isUrgent
     ? Colors.urgentColor
     : userId != null
-    ? Colors.AcceptButtonColor
+    ? Colors.sittingAccepted
     : Colors.cardBackgroundColor;
   const borderColor = isUrgent ? Colors.urgentTextColor : Colors.mainColor;
   const deleteBooking = useCallback(() => {
