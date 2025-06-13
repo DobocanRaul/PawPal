@@ -57,7 +57,6 @@ export default function chatPage() {
         .withAutomaticReconnect()
         .build();
 
-      console.log("Passed");
       newConn.on("ReceiveSpecificMessage", (userId, message) => {
         setMessages((prev) => [...prev, { senderId: userId, msg: message }]);
       });

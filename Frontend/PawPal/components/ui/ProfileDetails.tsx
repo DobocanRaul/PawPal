@@ -1,5 +1,4 @@
-import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { HeaderComponent } from "./HeaderComponent";
 import StarRating from "react-native-star-rating-widget";
 import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
@@ -7,12 +6,15 @@ import { TagSquare } from "./TagSquare";
 import { Colors } from "../../constants/Colors";
 import { UserProfile } from "../../app/profile/[userId]";
 import * as SecureStorage from "expo-secure-store";
+import { IconSymbol } from "./IconSymbol";
+import { useRouter } from "expo-router";
 type ProfileDetailsProps = {
   profile: UserProfile;
 };
 
 export function ProfileDetails(props: ProfileDetailsProps) {
   const { profile } = props;
+  const router = useRouter();
   const userId = SecureStorage.getItem("userId");
   let isCurrentUser = false;
   if (profile.id.toLowerCase() === userId?.toLowerCase()) {
@@ -46,23 +48,27 @@ export function ProfileDetails(props: ProfileDetailsProps) {
           <Text style={[Styles.specificFontFamily, Styles.textSize]}>
             Hi, I'm{" "}
           </Text>
-          <Text
-            style={[
-              { fontSize: 36 },
-              Styles.specificFontFamily,
-              Styles.boldFont,
-            ]}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+            }}
           >
-            {profile.name}
-          </Text>
-          {/* <StarRating
-            rating={profile.rating}
-            maxStars={5}
-            starSize={24}
-            color={Colors.mainColor}
-            starStyle={{ marginHorizontal: 0 }}
-            onChange={(_) => {}}
-          /> */}
+            <Text
+              style={[
+                { fontSize: 36 },
+                Styles.specificFontFamily,
+                Styles.boldFont,
+              ]}
+            >
+              {profile.name}
+            </Text>
+            <TouchableOpacity onPress={() => router.push("/editProfilePage")}>
+              <IconSymbol name="edit" color={Colors.light.text} />
+            </TouchableOpacity>
+          </View>
         </View>
         <View
           style={{

@@ -5,11 +5,10 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import "react-native-reanimated";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "../hooks/useColorScheme";
 import * as SecureStorage from "expo-secure-store";
 import Toast from "react-native-toast-message";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -47,7 +46,7 @@ export default function RootLayout() {
     <ThemeProvider value={DefaultTheme}>
       <Stack
         screenOptions={{
-          headerShadowVisible: false, // ✅ Removes bottom shadow (iOS)
+          headerShadowVisible: false,
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -65,6 +64,10 @@ export default function RootLayout() {
         <Stack.Screen
           name="sittingHistory"
           options={{ navigationBarHidden: true, headerShown: false }}
+        />
+        <Stack.Screen
+          name="editProfilePage"
+          options={{ navigationBarHidden: true, headerTitle: "" }}
         />
         <Stack.Screen
           name="petProfile/[petId]"
