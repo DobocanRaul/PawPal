@@ -42,6 +42,7 @@ public class BookingController : ControllerBase
             .Include(b => b.Pet)
             .Include(b => b.User)
             .Where(b => b.OwnerId == userId && b.StartDate> DateOnly.FromDateTime(DateTime.Now))
+            .OrderBy(b => b.StartDate)
             .ToListAsync();
         if (bookings == null || !bookings.Any())
         {
@@ -85,7 +86,7 @@ public class BookingController : ControllerBase
         List<Booking> bookings = await _context.Bookings
             .Include(b => b.Pet)
             .Include(b => b.User)
-            .Where(b => b.UserId == sitterId && b.StartDate <= DateOnly.FromDateTime(DateTime.Today))
+            .Where(b => b.UserId == sitterId && b.StartDate < DateOnly.FromDateTime(DateTime.Today))
             .ToListAsync();
 
         return Ok(bookings);
@@ -170,6 +171,11 @@ public class BookingController : ControllerBase
         if (booking == null)
         {
             return NotFound(new { Message = "Booking not found." });
+        }
+
+        if(booking.UserId!= null)
+        {
+            return BadRequest(new { Message="Sitting is booked!"});
         }
 
         _context.Bookings.Remove(booking);
