@@ -14,7 +14,6 @@ type ChatButtonProps = {
 export function ChatButton(props: ChatButtonProps) {
   const { user, lastMessage } = props;
   let date;
-  console.log(lastMessage);
   if (lastMessage) {
     date = new Date(lastMessage.dateTimeSent).toLocaleTimeString([], {
       hour: "2-digit",

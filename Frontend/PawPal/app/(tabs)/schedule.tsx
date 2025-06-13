@@ -1,5 +1,5 @@
-import { SittingDetails } from "@/components/ui/SittingDetails";
-import { Colors } from "@/constants/Colors";
+import { SittingDetails } from "../../components/ui/SittingDetails";
+import { Colors } from "../../constants/Colors";
 import { useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -13,7 +13,7 @@ import {
 import * as SecureStorage from "expo-secure-store";
 import { UserProfile } from "../profile/[userId]";
 import { useFocusEffect } from "@react-navigation/native";
-import { DeleteBookingModal } from "@/components/ui/DeleteModal";
+import { DeleteBookingModal } from "../../components/ui/DeleteModal";
 
 export type SittingProfile = {
   id: string;

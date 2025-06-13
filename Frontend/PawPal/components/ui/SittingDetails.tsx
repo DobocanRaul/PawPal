@@ -41,6 +41,11 @@ export function SittingDetails({
       method: "DELETE",
     })
       .then((response) => {
+        if (!response.ok) {
+          const error = response.json(); // 👈 read error body here
+          console.log("Server error:", error);
+        }
+        console.log(response);
         setModalVisibility(false);
         if (response.status == 400) {
           Toast.show({
@@ -49,7 +54,7 @@ export function SittingDetails({
           });
           return;
         }
-        router.replace("/(tabs)");
+        router.replace("/(tabs)/schedule");
         Toast.show({
           type: "success",
           text1: "Deleting the booking was succesfull",
@@ -82,7 +87,7 @@ export function SittingDetails({
           uri: "data:image/jpeg;base64," + pet.image,
         }}
         style={{
-          height: 100,
+          height: "100%",
           width: 100,
           borderRadius: 16,
         }}
