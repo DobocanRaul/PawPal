@@ -12,7 +12,7 @@ using System.Security.Claims;
 using System.Text;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class AuthController : ControllerBase
 {
     private readonly UserManager<IdentityUser> _userManager;
