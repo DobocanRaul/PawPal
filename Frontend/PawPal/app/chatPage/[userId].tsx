@@ -19,14 +19,14 @@ import {
   HubConnectionBuilder,
   LogLevel,
 } from "@microsoft/signalr";
-import { IconSymbol } from "@/components/ui/IconSymbol";
+import { IconSymbol } from "../../components/ui/IconSymbol";
 import Toast from "react-native-toast-message";
 import { Colors } from "../../constants/Colors";
 import { UserProfile } from "../profile/[userId]";
 
 type Message = {
-  username: string;
-  message: string;
+  senderId: string;
+  msg: string;
 };
 
 export default function chatPage() {
@@ -54,10 +54,7 @@ export default function chatPage() {
         .build();
 
       newConn.on("ReceiveSpecificMessage", (userId, message) => {
-        setMessages((prev) => [
-          ...prev,
-          { username: userId, message: message },
-        ]);
+        setMessages((prev) => [...prev, { senderId: userId, msg: message }]);
       });
 
       await newConn.start();
@@ -84,6 +81,14 @@ export default function chatPage() {
       })
       .then((data) => {
         if (data) setUser(data);
+      });
+    const messagesurl =
+      process.env.EXPO_PUBLIC_API_URL + "/Messages/AllMessages/" + currentUser;
+
+    fetch(messagesurl)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data) setMessages(data);
       });
   };
 
@@ -141,7 +146,7 @@ export default function chatPage() {
               flatListRef.current?.scrollToEnd({ animated: true });
             }}
             renderItem={({ item }) => {
-              const isMe = userId === item.username;
+              const isMe = userId === item.senderId;
               return (
                 <View
                   style={[
@@ -159,7 +164,7 @@ export default function chatPage() {
                       },
                     ]}
                   >
-                    {item.message}
+                    {item.msg}
                   </Text>
                 </View>
               );

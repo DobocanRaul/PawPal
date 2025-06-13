@@ -1,4 +1,4 @@
-import { Booking, SittingProfile } from "@/app/(tabs)/schedule";
+import { Booking, SittingProfile } from "../../app/(tabs)/schedule";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { Styles } from "../../constants/Styles";
 import { Colors } from "../../constants/Colors";
