@@ -3,13 +3,25 @@ import { UserProfile } from "../../app/profile/[userId]";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Colors } from "../../constants/Colors";
 import { router } from "expo-router";
+import { LastMessageInfo } from "../../app/(tabs)/chats";
+import { IconSymbol } from "../../components/ui/IconSymbol";
 
 type ChatButtonProps = {
   user: UserProfile;
+  lastMessage: LastMessageInfo;
 };
 
 export function ChatButton(props: ChatButtonProps) {
-  const { user } = props;
+  const { user, lastMessage } = props;
+  let date;
+  console.log(lastMessage);
+  if (lastMessage) {
+    date = new Date(lastMessage.dateTimeSent).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false, // use true for AM/PM
+    });
+  }
   return (
     <GestureHandlerRootView>
       <TouchableOpacity
@@ -32,11 +44,28 @@ export function ChatButton(props: ChatButtonProps) {
           />
           <View style={styles.messageRow}>
             <Text style={styles.name}>{user.name}</Text>
-            <Text>Last message sent</Text>
+            {lastMessage === undefined ? (
+              <Text></Text>
+            ) : (
+              <Text>{lastMessage.msg}</Text>
+            )}
           </View>
-          <View style={styles.infoRow}>
-            <Text>17:30</Text>
-          </View>
+          {lastMessage === undefined ? (
+            <></>
+          ) : (
+            <View style={styles.infoRow}>
+              <Text>{date} </Text>
+              {user.id === lastMessage.receiverId ? (
+                <IconSymbol name="check" color={Colors.light.text} size={16} />
+              ) : (
+                <IconSymbol
+                  name="circle"
+                  color={Colors.urgentTextColor}
+                  size={20}
+                />
+              )}
+            </View>
+          )}
         </View>
       </TouchableOpacity>
     </GestureHandlerRootView>
@@ -65,9 +94,12 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   infoRow: {
-    height: "100%",
+    height: "auto",
     marginVertical: 10,
-    justifyContent: "flex-start",
+    gap: 8,
+    justifyContent: "space-evenly",
     padding: 10,
+    flexDirection: "column",
+    alignItems: "center",
   },
 });
