@@ -10,9 +10,9 @@ import { IconSymbol } from "./IconSymbol";
 import { InfoSquare } from "./YellowInfoSquare";
 import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
 import { StyleSheet } from "react-native";
-import { Styles } from "@/constants/Styles";
-import { Colors } from "@/constants/Colors";
-import { Pet } from "@/app/(tabs)/schedule";
+import { Styles } from "../../constants/Styles";
+import { Colors } from "../../constants/Colors";
+import { Pet } from "../../app/(tabs)/schedule";
 import * as SecureStorage from "expo-secure-store";
 import { useCallback, useState } from "react";
 import { router } from "expo-router";
@@ -104,8 +104,31 @@ export function DetailedPetView({
             alignSelf: "center",
           }}
         />
-
-        <Text style={{ fontSize: 40 }}>{petDetails.name}</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 20,
+          }}
+        >
+          <Text style={{ fontSize: 40 }}>{petDetails.name}</Text>
+          {petDetails.ownerId == UserID ? (
+            <TouchableOpacity
+              onPress={() => {
+                router.push({
+                  pathname: "/editPetProfile/[petId]",
+                  params: {
+                    petId: petDetails.id,
+                  },
+                });
+              }}
+            >
+              <IconSymbol name="edit" color={Colors.light.text} />
+            </TouchableOpacity>
+          ) : (
+            <></>
+          )}
+        </View>
         <View style={{ flexDirection: "row", gap: 4 }}>
           <IconSymbol name="location" color={"gray"} />
           <Text

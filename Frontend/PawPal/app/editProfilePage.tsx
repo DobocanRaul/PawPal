@@ -101,7 +101,7 @@ export default function editProfilePage() {
     formData.append("Name", name);
     formData.append("Address", profileDetails?.address ?? "");
 
-    if (image == null) {
+    if (image === null) {
       formData.append("Image", {
         uri: "data:image/jpeg;base64," + profileDetails?.image,
         name: "image.name",

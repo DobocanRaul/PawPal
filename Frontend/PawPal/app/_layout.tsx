@@ -70,6 +70,13 @@ export default function RootLayout() {
           options={{ navigationBarHidden: true, headerTitle: "" }}
         />
         <Stack.Screen
+          name="editPetProfile/[petId]"
+          options={{
+            navigationBarHidden: true,
+            headerTitle: "",
+          }}
+        />
+        <Stack.Screen
           name="petProfile/[petId]"
           options={{
             navigationBarHidden: true,

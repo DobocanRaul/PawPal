@@ -1,4 +1,4 @@
-import { Colors } from "@/constants/Colors";
+import { Colors } from "../../constants/Colors";
 import { useCallback, useState } from "react";
 import {
   View,
@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import * as SecureStorage from "expo-secure-store";
 import { router } from "expo-router";
-import { IconSymbol } from "@/components/ui/IconSymbol";
+import { IconSymbol } from "../../components/ui/IconSymbol";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");

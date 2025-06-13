@@ -15,7 +15,7 @@ import {
   SafeAreaView,
   Keyboard,
 } from "react-native";
-import { Colors } from "@/constants/Colors";
+import { Colors } from "../constants/Colors";
 import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
 import * as SecureStorage from "expo-secure-store";
 import { router } from "expo-router";

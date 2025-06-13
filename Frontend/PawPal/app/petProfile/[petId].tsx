@@ -1,4 +1,4 @@
-import { ThemedView } from "@/components/ThemedView";
+import { ThemedView } from "../../components/ThemedView";
 import React, { useEffect, useState } from "react";
 import { DetailedPetView } from "../../components/ui/DetailedViewPet";
 import { ActivityIndicator } from "react-native";
