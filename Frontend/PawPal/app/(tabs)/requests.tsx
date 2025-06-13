@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Booking } from "./schedule";
-import { SittingDetails } from "@/components/ui/SittingDetails";
+import { SittingDetails } from "../../components/ui/SittingDetails";
 import { useCallback, useEffect, useState } from "react";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import * as SecureStorage from "expo-secure-store";

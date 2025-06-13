@@ -67,6 +67,7 @@ export function BookingRequestCard(props: BookingRequestCardProps) {
               method: "PUT",
               headers: {
                 "Content-Type": "application/json",
+                "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
               },
               body: JSON.stringify({
                 bookingId: booking.id,
@@ -89,6 +90,7 @@ export function BookingRequestCard(props: BookingRequestCardProps) {
             fetch(URL_API + "/BookingRequest/ResolveRequest", {
               method: "PUT",
               headers: {
+                "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({

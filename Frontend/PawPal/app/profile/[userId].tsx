@@ -7,9 +7,11 @@ import { useLocalSearchParams } from "expo-router";
 
 export type UserProfile = {
   id: string;
+  email: string;
   name: string;
   rating: number;
   image: string;
+  address: string;
   bestWithTags: string[];
   availabilityTags: string[];
   descriptionTags: string[];
@@ -23,7 +25,6 @@ export default function profile() {
   useEffect(() => {
     const API_URL = process.env.EXPO_PUBLIC_API_URL;
     const url = `${API_URL}/User/GetUser/${userId}`;
-    console.log(url);
     fetch(url, {
       method: "GET",
       headers: {

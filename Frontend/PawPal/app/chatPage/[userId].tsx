@@ -48,15 +48,19 @@ export default function chatPage() {
     try {
       const url = API_URL + "/Chat";
       const newConn = new HubConnectionBuilder()
-        .withUrl(url)
+        .withUrl(url, {
+          headers: {
+            "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+          },
+        })
         .configureLogging(LogLevel.Information)
         .withAutomaticReconnect()
         .build();
 
+      console.log("Passed");
       newConn.on("ReceiveSpecificMessage", (userId, message) => {
         setMessages((prev) => [...prev, { senderId: userId, msg: message }]);
       });
-
       await newConn.start();
       await newConn.invoke("JoinSpecificChat", {
         userId: userId,
@@ -65,7 +69,7 @@ export default function chatPage() {
 
       setConnection(newConn);
     } catch (e) {
-      console.log(e);
+      console.log("This is error", e);
     }
 
     const url = process.env.EXPO_PUBLIC_API_URL + "/User/GetUser/" + userId;

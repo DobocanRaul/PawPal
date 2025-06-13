@@ -35,6 +35,7 @@ function createBookingRequest(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
     },
     body: JSON.stringify({
       bookingId: bookingId,
@@ -63,6 +64,9 @@ export function DetailedPetView({
       const url = API_URL + "/Pet/DeletePet/" + petDetails.id;
       fetch(url, {
         method: "DELETE",
+        headers: {
+          "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+        },
       }).then((response) => {
         if (response.status != 200)
           Toast.show({

@@ -1,6 +1,6 @@
 import { ThemedView } from "@/components/ThemedView";
 import React, { useEffect, useState } from "react";
-import { DetailedPetView } from "@/components/ui/DetailedViewPet";
+import { DetailedPetView } from "../../components/ui/DetailedViewPet";
 import { ActivityIndicator } from "react-native";
 import { Pet } from "../(tabs)/schedule";
 import { router, useLocalSearchParams } from "expo-router";
