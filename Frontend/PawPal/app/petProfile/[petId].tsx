@@ -15,7 +15,11 @@ export default function petProfile() {
   const canBook = params.canBook == "true" ? true : false;
   const bookingId = params.bookingId as string;
   useEffect(() => {
-    fetch(API_URL + "/Pet/Pet/" + petId)
+    fetch(API_URL + "/Pet/Pet/" + petId, {
+      headers: {
+        "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+      },
+    })
       .then((response) => response.json())
       .then((data) => {
         setDetailedPetViewInfo(data);

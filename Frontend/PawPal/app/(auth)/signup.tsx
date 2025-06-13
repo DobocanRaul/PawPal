@@ -1,4 +1,4 @@
-import { IconSymbol } from "@/components/ui/IconSymbol";
+import { IconSymbol } from "../../components/ui/IconSymbol";
 import { useCallback, useState } from "react";
 import {
   View,
@@ -19,7 +19,7 @@ import {
   TextInput,
 } from "react-native-gesture-handler";
 import * as ImagePicker from "expo-image-picker";
-import { Colors } from "@/constants/Colors";
+import { Colors } from "../../constants/Colors";
 import Toast from "react-native-toast-message";
 import { router } from "expo-router";
 
@@ -132,6 +132,9 @@ export default function signup() {
       const response = await fetch(url, {
         method: "POST",
         body: formData,
+        headers: {
+          "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+        },
       });
 
       if (response.status === 409) {

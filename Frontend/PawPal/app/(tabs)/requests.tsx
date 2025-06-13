@@ -44,7 +44,12 @@ export default function Requests() {
       fetch(
         process.env.EXPO_PUBLIC_API_URL +
           "/BookingRequest/GetActiveRequests/" +
-          userId
+          userId,
+        {
+          headers: {
+            "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+          },
+        }
       )
         .then((response) => response.json())
         .then((data) => {
@@ -81,7 +86,12 @@ export default function Requests() {
                 "/Booking/getAvailableBookingsByLocation/" +
                 location +
                 "/" +
-                userId
+                userId,
+              {
+                headers: {
+                  "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+                },
+              }
             )
               .then((response) => response.json())
               .then((data) => {

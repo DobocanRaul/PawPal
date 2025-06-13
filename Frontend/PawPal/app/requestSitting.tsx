@@ -42,7 +42,11 @@ export default function RequestSitting() {
         if (!userId) return;
         const petsUrl = `${API_URL}/Pet/Pets/${userId}`;
         try {
-          const response = await fetch(petsUrl);
+          const response = await fetch(petsUrl, {
+            headers: {
+              "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+            },
+          });
           const data = await response.json();
           setPets(data);
         } catch (error) {
@@ -81,6 +85,7 @@ export default function RequestSitting() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
           },
           body,
         });

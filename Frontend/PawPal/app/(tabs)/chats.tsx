@@ -26,7 +26,11 @@ export default function chats() {
           const userId = await SecureStore.getItemAsync("userId");
           const url = `${API_URL}/Booking/GetUsersForBookings/${userId}`;
 
-          const response = await fetch(url);
+          const response = await fetch(url, {
+            headers: {
+              "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+            },
+          });
           const data = await response.json();
           setUsers(data);
         } catch (error) {
@@ -40,7 +44,11 @@ export default function chats() {
           const userId = await SecureStore.getItemAsync("userId");
           const url = `${API_URL}/Messages/AllLastMessages/${userId}`;
 
-          const response = await fetch(url);
+          const response = await fetch(url, {
+            headers: {
+              "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+            },
+          });
           const data = await response.json();
           setLastMessages(data);
         } catch (error) {

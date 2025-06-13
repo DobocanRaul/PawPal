@@ -4,8 +4,8 @@ import { HeaderComponent } from "./HeaderComponent";
 import StarRating from "react-native-star-rating-widget";
 import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
 import { TagSquare } from "./TagSquare";
-import { Colors } from "@/constants/Colors";
-import { UserProfile } from "@/app/profile/[userId]";
+import { Colors } from "../../constants/Colors";
+import { UserProfile } from "../../app/profile/[userId]";
 import * as SecureStorage from "expo-secure-store";
 type ProfileDetailsProps = {
   profile: UserProfile;

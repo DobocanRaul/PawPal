@@ -39,6 +39,9 @@ export function SittingDetails({
     const url = API_URL + "/Booking/DeleteBooking/" + id;
     fetch(url, {
       method: "DELETE",
+      headers: {
+        "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+      },
     })
       .then((response) => {
         if (!response.ok) {

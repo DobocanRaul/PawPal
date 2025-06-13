@@ -36,6 +36,7 @@ export default function LoginPage() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
           },
           body: body,
         })

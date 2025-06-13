@@ -69,7 +69,11 @@ export default function chatPage() {
     }
 
     const url = process.env.EXPO_PUBLIC_API_URL + "/User/GetUser/" + userId;
-    fetch(url)
+    fetch(url, {
+      headers: {
+        "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+      },
+    })
       .then((response) => {
         if (response.status != 200) {
           Toast.show({
@@ -85,7 +89,11 @@ export default function chatPage() {
     const messagesurl =
       process.env.EXPO_PUBLIC_API_URL + "/Messages/AllMessages/" + currentUser;
 
-    fetch(messagesurl)
+    fetch(messagesurl, {
+      headers: {
+        "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+      },
+    })
       .then((response) => response.json())
       .then((data) => {
         if (data) setMessages(data);

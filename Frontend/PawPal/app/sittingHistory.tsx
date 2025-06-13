@@ -32,8 +32,16 @@ export default function SittingHistory() {
       const fetchSittingHistory = async () => {
         try {
           const [ownerResponse, sitterResponse] = await Promise.all([
-            fetch(asOwnerUrl),
-            fetch(asSitterUrl),
+            fetch(asOwnerUrl, {
+              headers: {
+                "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+              },
+            }),
+            fetch(asSitterUrl, {
+              headers: {
+                "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+              },
+            }),
           ]);
 
           const ownerData = await ownerResponse.json();

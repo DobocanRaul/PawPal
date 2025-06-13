@@ -26,6 +26,7 @@ const MAPPING = {
   eye: "remove-red-eye",
   check: "check",
   circle: "circle",
+  edit: "edit",
 } as Partial<
   Record<
     import("expo-symbols").SymbolViewProps["name"],

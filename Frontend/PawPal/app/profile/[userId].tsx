@@ -1,5 +1,5 @@
-import { ThemedView } from "@/components/ThemedView";
-import { ProfileDetails } from "@/components/ui/ProfileDetails";
+import { ThemedView } from "../../components/ThemedView";
+import { ProfileDetails } from "../../components/ui/ProfileDetails";
 import { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
 import * as S from "expo-secure-store";
@@ -22,7 +22,14 @@ export default function profile() {
   const userId = useLocalSearchParams().userId as string;
   useEffect(() => {
     const API_URL = process.env.EXPO_PUBLIC_API_URL;
-    fetch(`${API_URL}/User/GetUser/${userId}`)
+    const url = `${API_URL}/User/GetUser/${userId}`;
+    console.log(url);
+    fetch(url, {
+      method: "GET",
+      headers: {
+        "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");

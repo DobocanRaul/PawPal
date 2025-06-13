@@ -32,7 +32,11 @@ export default function HomeScreen() {
       const getPets = async function () {
         const petsUrl = API_URL + "/Pet/Pets/" + userId;
         try {
-          const repsonseData = await fetch(petsUrl);
+          const repsonseData = await fetch(petsUrl, {
+            headers: {
+              "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+            },
+          });
 
           const data = await repsonseData.json();
           setPets(data);

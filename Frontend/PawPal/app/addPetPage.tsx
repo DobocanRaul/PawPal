@@ -101,6 +101,9 @@ export default function AddPetPage() {
       const response = await fetch(url, {
         method: "POST",
         body: formData,
+        headers: {
+          "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+        },
       });
 
       if (!response.ok) {

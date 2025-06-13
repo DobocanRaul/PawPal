@@ -67,8 +67,16 @@ export default function TabTwoScreen() {
       const fetchData = async () => {
         try {
           const [sittingsRes, requestsRes] = await Promise.all([
-            fetch(sittingsUrl),
-            fetch(userBookingsUrl),
+            fetch(sittingsUrl, {
+              headers: {
+                "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+              },
+            }),
+            fetch(userBookingsUrl, {
+              headers: {
+                "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+              },
+            }),
           ]);
 
           const sittingsData = await sittingsRes.json();
