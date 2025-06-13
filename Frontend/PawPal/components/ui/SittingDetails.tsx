@@ -45,7 +45,6 @@ export function SittingDetails({
           const error = response.json(); // 👈 read error body here
           console.log("Server error:", error);
         }
-        console.log(response);
         setModalVisibility(false);
         if (response.status == 400) {
           Toast.show({
@@ -54,7 +53,7 @@ export function SittingDetails({
           });
           return;
         }
-        router.replace("/(tabs)/schedule");
+        router.replace("/(tabs)");
         Toast.show({
           type: "success",
           text1: "Deleting the booking was succesfull",
