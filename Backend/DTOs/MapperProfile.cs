@@ -36,6 +36,7 @@ public class MapperProfile :Profile
             .ForMember(dest => dest.Sitter, opt => opt.Ignore())
             .ForMember(dest => dest.status, opt => opt.Ignore())
             .ForMember(dest => dest.RequestDate, opt => opt.Ignore());
+        CreateMap<RegisterDto, User>();
     }
 
 }

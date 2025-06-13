@@ -16,8 +16,27 @@ public class UserDto
 
 }
 
-public class UserDtoForm()
+public class UserDtoForm
 {
         public String Name { get; set; }
         public IFormFile Image { get; set; }
 }
+
+
+public class RegisterDto
+{
+    public string Email { get; set; }
+
+    public string Password { get; set; }
+
+    public string Name { get; set; }
+
+    public string Address { get; set; }
+
+    public IFormFile Image { get; set; }
+
+    public List<string> AvailabilityTags { get; set; } = new();
+    public List<string> DescriptionTags { get; set; } = new();
+    public List<string> BestWithTags { get; set; } = new();
+}
+
