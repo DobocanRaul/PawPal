@@ -6,9 +6,9 @@ import {
   ActivityIndicator,
   Platform,
 } from "react-native";
-import { ThemedView } from "@/components/ThemedView";
+import { ThemedView } from "../../components/ThemedView";
 import * as SecureStore from "expo-secure-store";
-import { Colors } from "@/constants/Colors";
+import { Colors } from "../../constants/Colors";
 import { useCallback, useState } from "react";
 import { Pet } from "./schedule";
 import { useFocusEffect } from "@react-navigation/native";
@@ -17,7 +17,7 @@ import {
   GestureHandlerRootView,
   ScrollView,
 } from "react-native-gesture-handler";
-import { HomeCardPet } from "@/components/ui/HomeCardPet";
+import { HomeCardPet } from "../../components/ui/HomeCardPet";
 import { router } from "expo-router";
 export default function HomeScreen() {
   const [pets, setPets] = useState<Pet[]>([]);
@@ -52,37 +52,10 @@ export default function HomeScreen() {
 
   return (
     <GestureHandlerRootView>
-      <ScrollView style={{ flex: 1, backgroundColor: "#fff" }}>
-        <Text
-          style={[styles.titleStyle, { alignSelf: "baseline", marginLeft: 20 }]}
-        >
-          Take a look at your furry friends!
-        </Text>
-        <View style={{ paddingBottom: 20 }}>
-          {!isLoading ? (
-            pets.length > 0 ? (
-              <FlatList
-                data={pets}
-                keyExtractor={(item) => item.id}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                renderItem={({ item }) => <HomeCardPet pet={item} />}
-              />
-            ) : (
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: "bold",
-                  alignSelf: "center",
-                }}
-              >
-                Looks like no furry friends were found {":("}
-              </Text>
-            )
-          ) : (
-            <ActivityIndicator />
-          )}
-        </View>
+      <ScrollView
+        style={{ flex: 1, backgroundColor: "#fff" }}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
           <TouchableOpacity
             onPress={() => router.push("/schedule")}
@@ -171,6 +144,37 @@ export default function HomeScreen() {
             </Text>
           </TouchableOpacity>
         </View>
+        <View style={styles.divider}></View>
+        <Text
+          style={[styles.titleStyle, { alignSelf: "baseline", marginLeft: 20 }]}
+        >
+          Take a look at your furry friends!
+        </Text>
+        <View style={{ paddingBottom: 20 }}>
+          {!isLoading ? (
+            pets.length > 0 ? (
+              <FlatList
+                data={pets}
+                keyExtractor={(item) => item.id}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item }) => <HomeCardPet pet={item} />}
+              />
+            ) : (
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "bold",
+                  alignSelf: "center",
+                }}
+              >
+                Looks like no furry friends were found {":("}
+              </Text>
+            )
+          ) : (
+            <ActivityIndicator />
+          )}
+        </View>
       </ScrollView>
     </GestureHandlerRootView>
   );
@@ -185,6 +189,13 @@ const styles = StyleSheet.create({
   stepContainer: {
     gap: 8,
     marginBottom: 8,
+  },
+  divider: {
+    borderBottomColor: Colors.labelTextColor,
+    borderBottomWidth: 0.5,
+    marginVertical: 20,
+    width: "90%",
+    alignSelf: "center",
   },
   reactLogo: {
     height: 178,

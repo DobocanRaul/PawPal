@@ -36,8 +36,8 @@ export function HomeCardPet(props: CardProps) {
         <ImageBackground
           source={{ uri: "data:image/jpeg;base64," + pet.image }}
           style={{
-            width: 240,
-            height: 240,
+            width: 350,
+            height: 300,
             borderRadius: 8,
             overflow: "hidden",
             borderWidth: 2,
