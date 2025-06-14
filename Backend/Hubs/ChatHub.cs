@@ -13,9 +13,6 @@ public class ChatHub : Hub
     {
         this._context = context;
     }
-    public async Task JoinChat(UserConnection conn) {
-        await Clients.All.SendAsync("ReceiveMessage", "admin", $"{conn.UserId} has joined");
-    }
 
     public async Task JoinSpecificChat(UserConnection conn) {
         await Groups.AddToGroupAsync(Context.ConnectionId, conn.ChatName);
@@ -29,13 +26,13 @@ public class ChatHub : Hub
 
     public async Task SendSpecificMessage(Guid senderId,Guid receiverId, string message, string chatId)
      {
-        await Clients.Group(chatId).SendAsync("ReceiveSpecificMessage", senderId, message);
         Message newMessage = new Message();
         newMessage.SenderId = senderId;
         newMessage.ReceiverId = receiverId;
         newMessage.Id = new Guid();
         newMessage.Msg = message;
         newMessage.DateTimeSent = DateTime.Now;
+        await Clients.Group(chatId).SendAsync("ReceiveSpecificMessage", senderId, message,newMessage.DateTimeSent);
 
         await _context.Messages.AddAsync(newMessage);
         await _context.SaveChangesAsync();

@@ -108,6 +108,8 @@ public class UserController : ControllerBase
         }
 
         _mapper.Map(user, foundUser);
+
+        await _context.SaveChangesAsync();
         return Ok(foundUser);
 
         
