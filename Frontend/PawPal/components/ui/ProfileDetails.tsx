@@ -65,9 +65,13 @@ export function ProfileDetails(props: ProfileDetailsProps) {
             >
               {profile.name}
             </Text>
-            <TouchableOpacity onPress={() => router.push("/editProfilePage")}>
-              <IconSymbol name="edit" color={Colors.light.text} />
-            </TouchableOpacity>
+            {isCurrentUser ? (
+              <TouchableOpacity onPress={() => router.push("/editProfilePage")}>
+                <IconSymbol name="edit" color={Colors.light.text} />
+              </TouchableOpacity>
+            ) : (
+              <View></View>
+            )}
           </View>
         </View>
         <View

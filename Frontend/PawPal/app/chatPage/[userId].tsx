@@ -27,7 +27,15 @@ import { UserProfile } from "../profile/[userId]";
 type Message = {
   senderId: string;
   msg: string;
+  dateTimeSent: Date;
 };
+
+function getHoursAndMinutes(isoTimestamp) {
+  const date = new Date(isoTimestamp);
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  return `${hours}:${minutes}`;
+}
 
 export default function chatPage() {
   const [userDetails, setUser] = useState<UserProfile>();
@@ -46,19 +54,24 @@ export default function chatPage() {
     );
 
     try {
-      const url = API_URL + "/Chat";
+      const apiUrl = API_URL ?? "";
+      const apiKey = process.env.EXPO_PUBLIC_API_KEY ?? "";
+      const url = apiUrl + "/Chat";
       const newConn = new HubConnectionBuilder()
         .withUrl(url, {
           headers: {
-            "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+            "Ocp-Apim-Subscription-Key": apiKey,
           },
         })
         .configureLogging(LogLevel.Information)
         .withAutomaticReconnect()
         .build();
 
-      newConn.on("ReceiveSpecificMessage", (userId, message) => {
-        setMessages((prev) => [...prev, { senderId: userId, msg: message }]);
+      newConn.on("ReceiveSpecificMessage", (userId, message, dateTimeSent) => {
+        setMessages((prev) => [
+          ...prev,
+          { senderId: userId, msg: message, dateTimeSent: dateTimeSent },
+        ]);
       });
       await newConn.start();
       await newConn.invoke("JoinSpecificChat", {
@@ -165,18 +178,43 @@ export default function chatPage() {
                     !isMe ? styles.bubbleRight : styles.bubbleLeft,
                   ]}
                 >
-                  <Text
-                    style={[
-                      styles.bubble,
-                      {
-                        backgroundColor: !isMe
-                          ? Colors.mainColorInactive
-                          : Colors.textBox,
-                      },
-                    ]}
-                  >
-                    {item.msg}
-                  </Text>
+                  {!isMe ? (
+                    <View style={{ flexDirection: "row" }}>
+                      <Text style={{ fontSize: 8, alignSelf: "flex-end" }}>
+                        {getHoursAndMinutes(item.dateTimeSent)}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.bubble,
+                          {
+                            backgroundColor: !isMe
+                              ? Colors.mainColorInactive
+                              : Colors.textBox,
+                          },
+                        ]}
+                      >
+                        {item.msg}
+                      </Text>
+                    </View>
+                  ) : (
+                    <View style={{ flexDirection: "row" }}>
+                      <Text
+                        style={[
+                          styles.bubble,
+                          {
+                            backgroundColor: !isMe
+                              ? Colors.mainColorInactive
+                              : Colors.textBox,
+                          },
+                        ]}
+                      >
+                        {item.msg}
+                      </Text>
+                      <Text style={{ fontSize: 8, alignSelf: "flex-end" }}>
+                        {getHoursAndMinutes(item.dateTimeSent)}
+                      </Text>
+                    </View>
+                  )}
                 </View>
               );
             }}
