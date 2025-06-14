@@ -26,18 +26,41 @@ public class PawPalDbContext : IdentityDbContext
             .HasOne(b => b.Owner)
             .WithMany()
             .HasForeignKey(b => b.OwnerId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Restrict); 
 
         modelBuilder.Entity<Booking>()
             .HasOne(b => b.User)
             .WithMany()
             .HasForeignKey(b => b.UserId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.SetNull); 
+
+        modelBuilder.Entity<Booking>()
+            .HasOne(b => b.Pet)
+            .WithMany()
+            .HasForeignKey(b => b.PetId)
+            .OnDelete(DeleteBehavior.Restrict); 
 
         modelBuilder.Entity<BookingRequest>()
             .HasKey(br => new { br.BookingId, br.SitterId });
 
-    }
+        modelBuilder.Entity<BookingRequest>()
+            .HasOne(br => br.Booking)
+            .WithMany()
+            .HasForeignKey(br => br.BookingId)
+            .OnDelete(DeleteBehavior.Cascade); 
+
+        modelBuilder.Entity<BookingRequest>()
+            .HasOne(br => br.Sitter)
+            .WithMany()
+            .HasForeignKey(br => br.SitterId)
+            .OnDelete(DeleteBehavior.Restrict);        
+        modelBuilder.Entity<BookingRequest>()
+            .HasOne(br => br.Booking)
+            .WithMany()
+            .HasForeignKey(br => br.BookingId)
+            .OnDelete(DeleteBehavior.Cascade);
+            }
+
 }
 
 

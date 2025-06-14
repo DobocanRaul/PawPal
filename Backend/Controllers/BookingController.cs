@@ -162,11 +162,15 @@ public class BookingController : ControllerBase
         {
             DateOnly startDate = DateOnly.Parse(booking.StartDate);
             DateOnly endDate = DateOnly.Parse(booking.EndDate);
-            Booking existingBooking = await _context.Bookings.FirstOrDefaultAsync(p => p.PetId == booking.PetId && startDate == p.StartDate && p.EndDate == endDate);
+            if (startDate > endDate)
+            { 
+                return BadRequest(new { Message="StartDate bigger than End date"});
+            }
+            Booking existingBooking = await _context.Bookings.FirstOrDefaultAsync(p => p.PetId == booking.PetId && startDate == p.StartDate && p.EndDate == endDate || p.StartDate>= startDate && p.EndDate <= endDate);
             if (existingBooking != null) {
                 return BadRequest(new { Message = "Request for the same date already exists" });
-
             }
+            
         }
         catch (Exception ex)
         {
@@ -185,23 +189,41 @@ public class BookingController : ControllerBase
 
 
 
-    [HttpDelete("deleteBooking/{bookingId}")]
-    public async Task<IActionResult> DeleteBooking([FromRoute] Guid bookingId)
+    [HttpDelete("DeleteBooking/{bookingId}")]
+    public async Task<IActionResult> DeleteBooking(Guid bookingId)
     {
-        Booking booking = await _context.Bookings.FirstOrDefaultAsync(b => b.Id == bookingId);
-        if (booking == null)
+        try
         {
-            return NotFound(new { Message = "Booking not found." });
-        }
+            var booking = await _context.Bookings.FirstOrDefaultAsync(b => b.Id == bookingId);
+            if (booking == null)
+            {
+                return NotFound(new { Message = "Booking not found." });
+            }
 
-        if(booking.UserId!= null)
+            if (booking.UserId != null)
+            {
+                return BadRequest(new { Message = "Sitting is booked!" });
+            }
+
+            var requests = _context.BookingRequests
+            .Where(r => r.BookingId == bookingId);
+            _context.BookingRequests.RemoveRange(requests);
+
+            _context.Bookings.Remove(booking);
+            var affected = await _context.SaveChangesAsync();
+
+            if (affected == 0)
+            {
+                return StatusCode(500, new { Message = "SaveChanges did not apply any changes." });
+            }
+
+            return NoContent();
+        }
+        catch (Exception ex)
         {
-            return BadRequest(new { Message="Sitting is booked!"});
+            return StatusCode(500, new { Message = "Server error", Details = ex.Message });
         }
-
-        _context.Bookings.Remove(booking);
-        await _context.SaveChangesAsync();
-        return NoContent();
     }
-    
+
+
 }

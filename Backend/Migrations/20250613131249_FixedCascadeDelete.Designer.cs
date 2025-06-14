@@ -4,6 +4,7 @@ using Backend___PawPal.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend___PawPal.Migrations
 {
     [DbContext(typeof(PawPalDbContext))]
-    partial class PawPalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250613131249_FixedCascadeDelete")]
+    partial class FixedCascadeDelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,7 +58,7 @@ namespace Backend___PawPal.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Bookings", (string)null);
+                    b.ToTable("Bookings");
                 });
 
             modelBuilder.Entity("Backend___PawPal.Models.BookingRequest", b =>
@@ -77,7 +80,7 @@ namespace Backend___PawPal.Migrations
 
                     b.HasIndex("SitterId");
 
-                    b.ToTable("BookingRequests", (string)null);
+                    b.ToTable("BookingRequests");
                 });
 
             modelBuilder.Entity("Backend___PawPal.Models.Message", b =>
@@ -105,7 +108,7 @@ namespace Backend___PawPal.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Messages", (string)null);
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Backend___PawPal.Models.Pet", b =>
@@ -148,7 +151,7 @@ namespace Backend___PawPal.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Pets", (string)null);
+                    b.ToTable("Pets");
                 });
 
             modelBuilder.Entity("Backend___PawPal.Models.User", b =>
@@ -193,7 +196,7 @@ namespace Backend___PawPal.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
