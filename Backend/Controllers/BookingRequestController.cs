@@ -2,6 +2,7 @@
 using Backend___PawPal.Context;
 using Backend___PawPal.DTOs;
 using Backend___PawPal.Models;
+using Microsoft.AspNet.SignalR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,7 @@ namespace Backend___PawPal.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize]
 public class BookingRequestController : ControllerBase
 {
     private readonly PawPalDbContext _context;

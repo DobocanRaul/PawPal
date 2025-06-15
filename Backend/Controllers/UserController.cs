@@ -3,6 +3,7 @@ using Backend___PawPal.Context;
 using Backend___PawPal.DTOs;
 using Backend___PawPal.Models;
 using Backend___PawPal.Validators;
+using Microsoft.AspNet.SignalR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -12,6 +13,7 @@ namespace Backend___PawPal.Controllers;
 
 [Route("[controller]")]
 [ApiController]
+[Authorize]
 public class UserController : ControllerBase
 {
 

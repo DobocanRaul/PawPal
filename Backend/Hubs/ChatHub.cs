@@ -1,9 +1,12 @@
 ﻿using Backend___PawPal.Context;
 using Backend___PawPal.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Backend___PawPal.Hubs;
 
+
+[Authorize]
 public class ChatHub : Hub
 {
 

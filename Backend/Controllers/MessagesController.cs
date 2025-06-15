@@ -1,5 +1,6 @@
 ﻿using Backend___PawPal.Context;
 using Backend___PawPal.Models;
+using Microsoft.AspNet.SignalR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +8,7 @@ namespace Backend___PawPal.Controllers;
 
 [Route("[controller]")]
 [ApiController]
+[Authorize]
 public class MessagesController : ControllerBase
 {
     private readonly PawPalDbContext _context;

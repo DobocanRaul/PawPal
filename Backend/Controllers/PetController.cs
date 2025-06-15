@@ -12,6 +12,7 @@ namespace Backend___PawPal.Controllers;
 
 [Route("[Controller]")]
 [ApiController]
+[Authorize]
 public class PetController : ControllerBase
 
 {
