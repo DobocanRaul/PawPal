@@ -304,7 +304,7 @@ export default function signup() {
                   />
                 </View>
               ) : (
-                <View>
+                <View style={{ paddingTop: 40 }}>
                   <Text style={styles.welcomeText}>It's about the details</Text>
                   <Text style={styles.label}>
                     Tell us when are you available?

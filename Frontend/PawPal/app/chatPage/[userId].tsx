@@ -61,6 +61,7 @@ export default function chatPage() {
         .withUrl(url, {
           headers: {
             "Ocp-Apim-Subscription-Key": apiKey,
+            Authorization: `Beare ${process.env.EXPO_PUBLIC_TOKEN}`,
           },
         })
         .configureLogging(LogLevel.Information)
@@ -85,9 +86,11 @@ export default function chatPage() {
     }
 
     const url = process.env.EXPO_PUBLIC_API_URL + "/User/GetUser/" + userId;
+    const token = await SecureStore.getItemAsync("token");
     fetch(url, {
       headers: {
         "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+        Bearer: token || "",
       },
     })
       .then((response) => {
@@ -108,6 +111,7 @@ export default function chatPage() {
     fetch(messagesurl, {
       headers: {
         "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+        Bearer: token || "",
       },
     })
       .then((response) => response.json())

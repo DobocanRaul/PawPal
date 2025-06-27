@@ -15,7 +15,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.raul21.PawPal"
     },
     "web": {
       "bundler": "metro",
@@ -38,6 +39,20 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "8cb23509-1438-4897-a0f5-19c1ed9aa712"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/8cb23509-1438-4897-a0f5-19c1ed9aa712"
     }
   }
 }

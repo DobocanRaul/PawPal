@@ -23,6 +23,7 @@ import { Colors } from "../constants/Colors";
 import * as ImagePicker from "expo-image-picker";
 import Toast from "react-native-toast-message";
 import { useRouter } from "expo-router";
+import * as SecureStorage from "expo-secure-store";
 
 export default function editProfilePage() {
   const [userId, setUserId] = useState<string>("");
@@ -44,6 +45,7 @@ export default function editProfilePage() {
     const getUser = async function () {
       const userId = (await SecureStore.getItemAsync("userId")) || "";
       setUserId(userId);
+      const token = await SecureStorage.getItem("token");
 
       const API_URL = process.env.EXPO_PUBLIC_API_URL;
       const url = `${API_URL}/User/GetUser/${userId}`;
@@ -51,6 +53,7 @@ export default function editProfilePage() {
         method: "GET",
         headers: {
           "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY ?? "",
+          Bearer: token || "",
         },
       })
         .then((response) => {
@@ -121,12 +124,13 @@ export default function editProfilePage() {
     try {
       const API_URL = process.env.EXPO_PUBLIC_API_URL;
       const url = `${API_URL}/User/UpdateUser/${userId}`;
-
+      const token = await SecureStorage.getItem("token");
       const response = await fetch(url, {
         method: "PUT",
         body: formData,
         headers: {
           "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+          Bearer: token || "",
         },
       });
       if (response.status === 404) {

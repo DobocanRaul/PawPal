@@ -3,6 +3,7 @@ import { UserProfile } from "@/app/profile/[userId]";
 import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
 import { View, Image, Button, Text, TouchableOpacity } from "react-native";
+import * as SecureStorage from "expo-secure-store";
 
 type BookingRequestCardProps = {
   booking: Booking;
@@ -68,6 +69,7 @@ export function BookingRequestCard(props: BookingRequestCardProps) {
               headers: {
                 "Content-Type": "application/json",
                 "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+                Bearer: SecureStorage.getItem("token") || "",
               },
               body: JSON.stringify({
                 bookingId: booking.id,
@@ -92,6 +94,7 @@ export function BookingRequestCard(props: BookingRequestCardProps) {
               headers: {
                 "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
                 "Content-Type": "application/json",
+                Bearer: SecureStorage.getItem("token") || "",
               },
               body: JSON.stringify({
                 bookingId: booking.id,

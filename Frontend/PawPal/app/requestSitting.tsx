@@ -17,6 +17,7 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import Toast from "react-native-toast-message";
+import * as SecureStorage from "expo-secure-store";
 
 const formatDate = (date: Date): string => {
   const year = date.getFullYear();
@@ -40,11 +41,13 @@ export default function RequestSitting() {
       const getPets = async () => {
         const userId = await SecureStore.getItemAsync("userId");
         if (!userId) return;
+        const token = await SecureStorage.getItem("token");
         const petsUrl = `${API_URL}/Pet/Pets/${userId}`;
         try {
           const response = await fetch(petsUrl, {
             headers: {
               "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+              Bearer: token || "",
             },
           });
           const data = await response.json();
@@ -80,12 +83,14 @@ export default function RequestSitting() {
           startDate: formatDate(startDate),
           endDate: formatDate(endDate),
         });
+        const token = await SecureStorage.getItem("token");
 
         const response = await fetch(URL, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+            Bearer: token || "",
           },
           body,
         });

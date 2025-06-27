@@ -31,10 +31,12 @@ export default function HomeScreen() {
     useCallback(() => {
       const getPets = async function () {
         const petsUrl = API_URL + "/Pet/Pets/" + userId;
+        const token = await SecureStore.getItem("token");
         try {
           const repsonseData = await fetch(petsUrl, {
             headers: {
               "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+              Bearer: token || "",
             },
           });
 
@@ -47,7 +49,7 @@ export default function HomeScreen() {
         }
       };
       getPets();
-    }, [])
+    }, [isLoading])
   );
 
   return (

@@ -25,10 +25,12 @@ export default function profile() {
   useEffect(() => {
     const API_URL = process.env.EXPO_PUBLIC_API_URL;
     const url = `${API_URL}/User/GetUser/${userId}`;
+    const token = S.getItem("token");
     fetch(url, {
       method: "GET",
       headers: {
         "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+        Bearer: token || "",
       },
     })
       .then((response) => {
