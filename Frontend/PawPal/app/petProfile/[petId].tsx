@@ -4,6 +4,7 @@ import { DetailedPetView } from "../../components/ui/DetailedViewPet";
 import { ActivityIndicator } from "react-native";
 import { Pet } from "../(tabs)/schedule";
 import { router, useLocalSearchParams } from "expo-router";
+import * as SecureStorage from "expo-secure-store";
 
 export default function petProfile() {
   const [DetailedPetViewInfo, setDetailedPetViewInfo] = useState<Pet | null>(
@@ -15,9 +16,11 @@ export default function petProfile() {
   const canBook = params.canBook == "true" ? true : false;
   const bookingId = params.bookingId as string;
   useEffect(() => {
+    const token = SecureStorage.getItem("token");
     fetch(API_URL + "/Pet/Pet/" + petId, {
       headers: {
         "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+        Bearer: token || "",
       },
     })
       .then((response) => response.json())

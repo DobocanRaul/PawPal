@@ -37,10 +37,12 @@ export function SittingDetails({
   const deleteBooking = useCallback(() => {
     const API_URL = process.env.EXPO_PUBLIC_API_URL;
     const url = API_URL + "/Booking/DeleteBooking/" + id;
+    const token = SecureStore.getItem("token") || ""; // Ensure you have the token
     fetch(url, {
       method: "DELETE",
       headers: {
         "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+        Bearer: token || "",
       },
     })
       .then((response) => {

@@ -66,15 +66,18 @@ export default function TabTwoScreen() {
 
       const fetchData = async () => {
         try {
+          const token = await SecureStorage.getItemAsync("token");
           const [sittingsRes, requestsRes] = await Promise.all([
             fetch(sittingsUrl, {
               headers: {
                 "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+                Bearer: token || "",
               },
             }),
             fetch(userBookingsUrl, {
               headers: {
                 "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+                Bearer: token || "",
               },
             }),
           ]);

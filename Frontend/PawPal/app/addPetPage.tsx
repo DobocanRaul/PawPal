@@ -98,11 +98,13 @@ export default function AddPetPage() {
 
     try {
       const url = API_URL + "/Pet/CreatePet";
+      const token = await SecureStorage.getItem("token");
       const response = await fetch(url, {
         method: "POST",
         body: formData,
         headers: {
           "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+          Bearer: token || "",
         },
       });
 

@@ -26,6 +26,7 @@ export default function SittingHistory() {
   );
   useFocusEffect(
     useCallback(() => {
+      const token = SecureStorage.getItem("token");
       const asOwnerUrl = API_URL + "/Booking/getOwnerSittingHistory/" + userId;
       const asSitterUrl =
         API_URL + "/Booking/getSitterSittingHistory/" + userId;
@@ -35,11 +36,13 @@ export default function SittingHistory() {
             fetch(asOwnerUrl, {
               headers: {
                 "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+                Bearer: token || "",
               },
             }),
             fetch(asSitterUrl, {
               headers: {
                 "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+                Bearer: token || "",
               },
             }),
           ]);

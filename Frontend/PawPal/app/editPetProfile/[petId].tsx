@@ -21,6 +21,7 @@ import {
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import * as ImagePicker from "expo-image-picker";
 import Toast from "react-native-toast-message";
+import * as SecureStore from "expo-secure-store";
 
 export default function editPetProfile() {
   const [DetailedPetViewInfo, setDetailedPetViewInfo] = useState<Pet | null>(
@@ -47,9 +48,11 @@ export default function editPetProfile() {
   const router = useRouter();
 
   useEffect(() => {
+    const token = SecureStore.getItem("token");
     fetch(API_URL + "/Pet/Pet/" + petId, {
       headers: {
         "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+        Bearer: token || "",
       },
     })
       .then((response) => response.json())
@@ -148,11 +151,13 @@ export default function editPetProfile() {
 
     try {
       const url = API_URL + "/Pet/UpdatePet/" + DetailedPetViewInfo?.id;
+      const token = await SecureStore.getItemAsync("token");
       const response = await fetch(url, {
         method: "PUT",
         body: formData,
         headers: {
           "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+          Bearer: token || "",
         },
       });
 

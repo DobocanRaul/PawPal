@@ -25,10 +25,12 @@ export default function chats() {
           const API_URL = process.env.EXPO_PUBLIC_API_URL;
           const userId = await SecureStore.getItemAsync("userId");
           const url = `${API_URL}/Booking/GetUsersForBookings/${userId}`;
+          const token = await SecureStore.getItemAsync("token");
 
           const response = await fetch(url, {
             headers: {
               "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+              Bearer: token || "",
             },
           });
           const data = await response.json();
@@ -43,10 +45,12 @@ export default function chats() {
           const API_URL = process.env.EXPO_PUBLIC_API_URL;
           const userId = await SecureStore.getItemAsync("userId");
           const url = `${API_URL}/Messages/AllLastMessages/${userId}`;
+          const token = await SecureStore.getItemAsync("token");
 
           const response = await fetch(url, {
             headers: {
               "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+              Bearer: token || "",
             },
           });
           const data = await response.json();

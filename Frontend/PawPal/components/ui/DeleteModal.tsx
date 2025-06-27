@@ -36,7 +36,7 @@ export const DeletePetModal = (prop: DeletePetModalProps) => {
     >
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
-          <Text style={styles.title}>Delete booking</Text>
+          <Text style={styles.title}>Delete action</Text>
           <Text style={styles.message}>
             Are you sure you want to delete{" "}
             <Text style={{ fontWeight: "bold" }}>{petName}</Text>?

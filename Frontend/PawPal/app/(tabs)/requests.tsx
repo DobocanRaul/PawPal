@@ -41,6 +41,8 @@ export default function Requests() {
         })
       );
 
+      const token = SecureStorage.getItem("token");
+
       fetch(
         process.env.EXPO_PUBLIC_API_URL +
           "/BookingRequest/GetActiveRequests/" +
@@ -48,6 +50,7 @@ export default function Requests() {
         {
           headers: {
             "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+            Bearer: token || "",
           },
         }
       )
@@ -80,6 +83,7 @@ export default function Requests() {
               return;
             }
             setIsLoading(true);
+            const token = SecureStorage.getItem("token");
             const API_URL = process.env.EXPO_PUBLIC_API_URL;
             fetch(
               API_URL +
@@ -90,6 +94,7 @@ export default function Requests() {
               {
                 headers: {
                   "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+                  Bearer: token || "",
                 },
               }
             )
