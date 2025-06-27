@@ -11,7 +11,7 @@ namespace Backend___PawPal.Controllers;
 
 [Route("[controller]")]
 [ApiController]
-[Authorize]
+[Authorize(AuthenticationSchemes = "Bearer")]
 public class BookingController : ControllerBase
 {
 
@@ -54,8 +54,10 @@ public class BookingController : ControllerBase
 
         sittersOfbookings.AddRange(ownersOfBookings);
 
+        List<User> response = sittersOfbookings.Distinct().ToList();
 
-        return Ok(sittersOfbookings);
+
+        return Ok(response);
 
     }
     [HttpGet("getUserBookings/{userId}")]
