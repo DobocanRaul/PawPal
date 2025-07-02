@@ -42,7 +42,7 @@ export function SittingDetails({
       method: "DELETE",
       headers: {
         "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-        Bearer: token || "",
+        Authorization: "Bearer " + token || "",
       },
     })
       .then((response) => {

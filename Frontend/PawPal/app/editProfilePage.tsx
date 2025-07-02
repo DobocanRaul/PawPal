@@ -53,7 +53,7 @@ export default function editProfilePage() {
         method: "GET",
         headers: {
           "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY ?? "",
-          Bearer: token || "",
+          Authorization: "Bearer " + token || "",
         },
       })
         .then((response) => {
@@ -130,7 +130,7 @@ export default function editProfilePage() {
         body: formData,
         headers: {
           "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-          Bearer: token || "",
+          Authorization: "Bearer " + token || "",
         },
       });
       if (response.status === 404) {

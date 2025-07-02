@@ -52,7 +52,7 @@ export default function editPetProfile() {
     fetch(API_URL + "/Pet/Pet/" + petId, {
       headers: {
         "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-        Bearer: token || "",
+        Authorization: "Bearer " + token || "",
       },
     })
       .then((response) => response.json())
@@ -157,7 +157,7 @@ export default function editPetProfile() {
         body: formData,
         headers: {
           "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-          Bearer: token || "",
+          Authorization: "Bearer " + token || "",
         },
       });
 

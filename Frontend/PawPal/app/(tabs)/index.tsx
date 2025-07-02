@@ -26,7 +26,7 @@ export default function HomeScreen() {
     process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000"
   );
   const userId = SecureStore.getItem("userId");
-  userId;
+  const token = SecureStore.getItem("token");
   useFocusEffect(
     useCallback(() => {
       const getPets = async function () {
@@ -36,10 +36,16 @@ export default function HomeScreen() {
           const repsonseData = await fetch(petsUrl, {
             headers: {
               "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-              Bearer: token || "",
+              Authorization: "Bearer " + token || "",
             },
           });
-
+          if (repsonseData.status === 401) {
+            console.error("Unauthorized access. Please log in again.");
+            router.push("/auth");
+            await SecureStore.deleteItemAsync("token");
+            await SecureStore.deleteItemAsync("userId");
+            return;
+          }
           const data = await repsonseData.json();
           setPets(data);
         } catch (error) {

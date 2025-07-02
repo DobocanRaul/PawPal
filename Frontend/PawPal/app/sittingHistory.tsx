@@ -36,13 +36,13 @@ export default function SittingHistory() {
             fetch(asOwnerUrl, {
               headers: {
                 "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-                Bearer: token || "",
+                Authorization: "Bearer " + token || "",
               },
             }),
             fetch(asSitterUrl, {
               headers: {
                 "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-                Bearer: token || "",
+                Authorization: "Bearer " + token || "",
               },
             }),
           ]);
@@ -50,8 +50,12 @@ export default function SittingHistory() {
           const ownerData = await ownerResponse.json();
           const sitterData = await sitterResponse.json();
 
-          setHistoryAsOwner(ownerData);
-          setHistoryAsSitter(sitterData);
+          if (ownerResponse.status === 200) {
+            setHistoryAsOwner(ownerData);
+          }
+          if (sitterResponse.status === 200) {
+            setHistoryAsSitter(sitterData);
+          }
         } catch (error) {
           console.error("Error fetching sitting history:", error);
         } finally {
