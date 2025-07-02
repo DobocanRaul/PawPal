@@ -81,9 +81,16 @@ export default function TabTwoScreen() {
               },
             }),
           ]);
+
           const sittingsData = await sittingsRes.json();
           const requestsData = await requestsRes.json();
 
+          if (sittingsRes.status === 404) {
+            setSittingProfiles([]);
+          }
+          if (requestsRes.status === 404) {
+            setSittingRequests([]);
+          }
           if (sittingsRes.status === 200) {
             setSittingProfiles(sittingsData);
           }

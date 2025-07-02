@@ -46,9 +46,7 @@ export default function LoginPage() {
         body: body,
       })
         .then((response) => {
-          console.log("Response status:", response);
           if (response.status == 401) {
-            console.log("Here");
             throw new Error("Credentials not ok!");
           } else return response.json();
         })

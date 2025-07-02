@@ -23,7 +23,6 @@ export default function RootLayout() {
   useEffect(() => {
     const checkLogin = async () => {
       const userId = await SecureStorage.getItemAsync("userId");
-      console.log(userId);
       setIsLoggedIn(userId != null);
       setIsReady(true);
       SplashScreen.hideAsync();

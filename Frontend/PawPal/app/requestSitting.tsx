@@ -75,6 +75,14 @@ export default function RequestSitting() {
       return;
     }
 
+    if (startDate >= endDate) {
+      Toast.show({
+        type: "error",
+        text1: "End date must be after start date",
+      });
+      return;
+    }
+
     const request = async () => {
       try {
         const URL = `${API_URL}/Booking/createBooking`;

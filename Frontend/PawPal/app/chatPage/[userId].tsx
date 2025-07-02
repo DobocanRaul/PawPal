@@ -15,6 +15,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import * as SecureStore from "expo-secure-store";
 import { router, useLocalSearchParams } from "expo-router";
 import {
+  HttpTransportType,
   HubConnection,
   HubConnectionBuilder,
   LogLevel,
@@ -56,13 +57,16 @@ export default function chatPage() {
     try {
       const apiUrl = API_URL ?? "";
       const apiKey = process.env.EXPO_PUBLIC_API_KEY ?? "";
-      const url = apiUrl + "/Chat";
+      const token = SecureStore.getItem("token") ?? ""; // Raw JWT token (no "Bearer ")
+
+      // Build the connection URL with the subscription key as a query parameter
+      const url = `${apiUrl}/Chat?subscription-key=${encodeURIComponent(
+        apiKey
+      )}`;
+
       const newConn = new HubConnectionBuilder()
         .withUrl(url, {
-          headers: {
-            "Ocp-Apim-Subscription-Key": apiKey,
-            Authorization: `Beare ${process.env.EXPO_PUBLIC_TOKEN}`,
-          },
+          accessTokenFactory: async () => token, // 👈 Raw token only (no "Bearer")
         })
         .configureLogging(LogLevel.Information)
         .withAutomaticReconnect()

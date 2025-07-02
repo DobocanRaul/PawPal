@@ -1,4 +1,4 @@
-import { ActivityIndicator, FlatList, View } from "react-native";
+import { ActivityIndicator, FlatList, View, Text } from "react-native";
 import { Colors } from "../../constants/Colors";
 import { useCallback, useEffect, useState } from "react";
 import { UserProfile } from "../profile/[userId]";
@@ -76,6 +76,14 @@ export default function chats() {
     >
       {isLoading ? (
         <ActivityIndicator />
+      ) : users.length === 0 ? (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text style={{ fontSize: 16, color: Colors.light.text }}>
+            No users available for chat... {"\n"} Interact with someone to chat!
+          </Text>
+        </View>
       ) : (
         <FlatList
           data={users}
