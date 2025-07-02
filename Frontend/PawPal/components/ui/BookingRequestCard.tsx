@@ -69,7 +69,7 @@ export function BookingRequestCard(props: BookingRequestCardProps) {
               headers: {
                 "Content-Type": "application/json",
                 "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-                Bearer: SecureStorage.getItem("token") || "",
+                Authorization: "Bearer " + SecureStorage.getItem("token") || "",
               },
               body: JSON.stringify({
                 bookingId: booking.id,
@@ -94,7 +94,7 @@ export function BookingRequestCard(props: BookingRequestCardProps) {
               headers: {
                 "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
                 "Content-Type": "application/json",
-                Bearer: SecureStorage.getItem("token") || "",
+                Authorization: "Bearer " + SecureStorage.getItem("token") || "",
               },
               body: JSON.stringify({
                 bookingId: booking.id,

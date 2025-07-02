@@ -30,7 +30,7 @@ export default function chats() {
           const response = await fetch(url, {
             headers: {
               "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-              Bearer: token || "",
+              Authorization: "Bearer " + token || "",
             },
           });
           const data = await response.json();
@@ -50,7 +50,7 @@ export default function chats() {
           const response = await fetch(url, {
             headers: {
               "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-              Bearer: token || "",
+              Authorization: "Bearer " + token || "",
             },
           });
           const data = await response.json();
