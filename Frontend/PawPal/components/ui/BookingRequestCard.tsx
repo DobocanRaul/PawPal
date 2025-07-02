@@ -1,6 +1,6 @@
-import { Booking } from "@/app/(tabs)/schedule";
-import { UserProfile } from "@/app/profile/[userId]";
-import { Colors } from "@/constants/Colors";
+import { Booking } from "../../app/(tabs)/schedule";
+import { UserProfile } from "../../app/profile/[userId]";
+import { Colors } from "../../constants/Colors";
 import { router } from "expo-router";
 import { View, Image, Button, Text, TouchableOpacity } from "react-native";
 import * as SecureStorage from "expo-secure-store";

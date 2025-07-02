@@ -123,6 +123,7 @@ export default function editPetProfile() {
         type: "error",
         text1: "Age or weight are not a number",
       });
+      return;
     }
 
     const formData = new FormData();
@@ -204,7 +205,7 @@ export default function editPetProfile() {
                 <Text style={styles.label}>Happy birthday?</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Insert age"
+                  placeholder="Insert age like 3"
                   value={age.toString()}
                   onChangeText={(text) => setAge(text)}
                   keyboardType="numeric"
@@ -212,7 +213,7 @@ export default function editPetProfile() {
                 <Text style={styles.label}>Gained or lost? 😊</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Insert weight"
+                  placeholder="Insert weight like 3.5"
                   value={weight.toString()}
                   onChangeText={(text) => setWeight(text)}
                   keyboardType="numeric"

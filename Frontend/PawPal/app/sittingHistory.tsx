@@ -1,5 +1,5 @@
-import { BackButton } from "@/components/ui/BackButton";
-import { Styles } from "@/constants/Styles";
+import { BackButton } from "../components/ui/BackButton";
+import { Styles } from "../constants/Styles";
 import { useRouter } from "expo-router";
 import {
   View,
@@ -12,8 +12,8 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
 import { Booking } from "./(tabs)/schedule";
 import * as SecureStorage from "expo-secure-store";
-import { SittingDetails } from "@/components/ui/SittingDetails";
-import { Colors } from "@/constants/Colors";
+import { SittingDetails } from "../components/ui/SittingDetails";
+import { Colors } from "../constants/Colors";
 
 export default function SittingHistory() {
   const router = useRouter();

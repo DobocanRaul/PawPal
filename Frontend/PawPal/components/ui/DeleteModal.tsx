@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Pressable,
 } from "react-native";
-import { Colors } from "@/constants/Colors";
+import { Colors } from "../../constants/Colors";
 
 type DeleteModalProps = {
   visible: boolean;

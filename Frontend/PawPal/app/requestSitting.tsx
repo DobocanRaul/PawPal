@@ -12,7 +12,7 @@ import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
 import { Pet } from "./(tabs)/schedule";
 import { router, useFocusEffect } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-import { Colors } from "@/constants/Colors";
+import { Colors } from "../constants/Colors";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
@@ -47,7 +47,7 @@ export default function RequestSitting() {
           const response = await fetch(petsUrl, {
             headers: {
               "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-              Bearer: token || "",
+              Authorization: "Bearer " + token || "",
             },
           });
           const data = await response.json();
@@ -90,7 +90,7 @@ export default function RequestSitting() {
           headers: {
             "Content-Type": "application/json",
             "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-            Bearer: token || "",
+            Authorization: "Bearer " + token || "",
           },
           body,
         });
