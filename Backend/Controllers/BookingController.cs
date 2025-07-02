@@ -52,7 +52,24 @@ public class BookingController : ControllerBase
             .Select(b => b.Owner)
             .ToListAsync();
 
+        List<User> bookingRequestsOwners = await _context.BookingRequests
+            .Include(b => b.Sitter)
+            .Include(b => b.Booking)
+            .Where(b => b.Booking.OwnerId == userId && b.status != "Rejected")
+            .Select(b=>b.Sitter)
+            .ToListAsync();
+
+       List <User> bookingRequestsSitters = await _context.BookingRequests
+            .Include(b => b.Sitter)
+            .Include(b => b.Booking)
+            .Include (b=>b.Booking.Owner)
+            .Where(b => b.SitterId == userId && b.status!="Rejected")
+            .Select(b => b.Booking.Owner)
+            .ToListAsync();
+
         sittersOfbookings.AddRange(ownersOfBookings);
+        sittersOfbookings.AddRange(bookingRequestsOwners);
+        sittersOfbookings.AddRange(bookingRequestsSitters);
 
         List<User> response = sittersOfbookings.Distinct().ToList();
 
@@ -102,6 +119,13 @@ public class BookingController : ControllerBase
             .Include(b => b.Pet)
             .Where(b => b.Address.Contains(", " + cityName)&& b.OwnerId != userId && b.UserId == null && b.StartDate > DateOnly.FromDateTime(DateTime.Today))
             .ToListAsync();
+
+        List<Guid> bookingsRequested = await _context.BookingRequests
+            .Where(b => b.SitterId== userId)
+            .Select(b => b.BookingId)
+            .ToListAsync();
+
+        bookings = bookings.Where(b => !bookingsRequested.Any(br => br == b.Id)).ToList();
         return Ok(bookings);
     }
 

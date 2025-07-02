@@ -33,7 +33,7 @@ public class AuthController : ControllerBase
     {
         var user = await _userManager.FindByNameAsync(model.Email);
         if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
-        {
+        {   
             var authClaims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
