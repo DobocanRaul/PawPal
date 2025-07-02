@@ -1,4 +1,4 @@
-import { Colors } from "@/constants/Colors";
+import { Colors } from "../../constants/Colors";
 import {
   FlatList,
   Text,
@@ -11,10 +11,10 @@ import {
 import { Booking } from "./schedule";
 import { SittingDetails } from "../../components/ui/SittingDetails";
 import { useCallback, useEffect, useState } from "react";
-import { IconSymbol } from "@/components/ui/IconSymbol";
+import { IconSymbol } from "../../components/ui/IconSymbol";
 import * as SecureStorage from "expo-secure-store";
 import { UserProfile } from "../profile/[userId]";
-import { BookingRequestCard } from "@/components/ui/BookingRequestCard";
+import { BookingRequestCard } from "../../components/ui/BookingRequestCard";
 import { useFocusEffect } from "expo-router";
 
 export type BookingRequest = {
@@ -50,7 +50,7 @@ export default function Requests() {
         {
           headers: {
             "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-            Bearer: token || "",
+            Authorization: "Bearer " + token || "",
           },
         }
       )
@@ -94,7 +94,7 @@ export default function Requests() {
               {
                 headers: {
                   "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-                  Bearer: token || "",
+                  Authorization: "Bearer " + token || "",
                 },
               }
             )

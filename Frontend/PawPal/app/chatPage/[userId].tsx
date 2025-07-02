@@ -90,7 +90,7 @@ export default function chatPage() {
     fetch(url, {
       headers: {
         "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-        Bearer: token || "",
+        Authorization: "Bearer " + token || "",
       },
     })
       .then((response) => {
@@ -111,7 +111,7 @@ export default function chatPage() {
     fetch(messagesurl, {
       headers: {
         "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-        Bearer: token || "",
+        Authorization: "Bearer " + token || "",
       },
     })
       .then((response) => response.json())

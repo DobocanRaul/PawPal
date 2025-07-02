@@ -52,7 +52,7 @@ export default function editPetProfile() {
     fetch(API_URL + "/Pet/Pet/" + petId, {
       headers: {
         "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-        Bearer: token || "",
+        Authorization: "Bearer " + token || "",
       },
     })
       .then((response) => response.json())
@@ -123,6 +123,7 @@ export default function editPetProfile() {
         type: "error",
         text1: "Age or weight are not a number",
       });
+      return;
     }
 
     const formData = new FormData();
@@ -157,7 +158,7 @@ export default function editPetProfile() {
         body: formData,
         headers: {
           "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-          Bearer: token || "",
+          Authorization: "Bearer " + token || "",
         },
       });
 
@@ -204,7 +205,7 @@ export default function editPetProfile() {
                 <Text style={styles.label}>Happy birthday?</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Insert age"
+                  placeholder="Insert age like 3"
                   value={age.toString()}
                   onChangeText={(text) => setAge(text)}
                   keyboardType="numeric"
@@ -212,7 +213,7 @@ export default function editPetProfile() {
                 <Text style={styles.label}>Gained or lost? 😊</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Insert weight"
+                  placeholder="Insert weight like 3.5"
                   value={weight.toString()}
                   onChangeText={(text) => setWeight(text)}
                   keyboardType="numeric"

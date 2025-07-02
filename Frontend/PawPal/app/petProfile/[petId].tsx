@@ -20,7 +20,7 @@ export default function petProfile() {
     fetch(API_URL + "/Pet/Pet/" + petId, {
       headers: {
         "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-        Bearer: token || "",
+        Authorization: "Bearer " + token || "",
       },
     })
       .then((response) => response.json())

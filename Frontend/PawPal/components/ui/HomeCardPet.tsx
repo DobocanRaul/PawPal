@@ -1,5 +1,5 @@
-import { Pet } from "@/app/(tabs)/schedule";
-import { Colors } from "@/constants/Colors";
+import { Pet } from "../../app/(tabs)/schedule";
+import { Colors } from "../../constants/Colors";
 import { useRouter } from "expo-router";
 import {
   View,

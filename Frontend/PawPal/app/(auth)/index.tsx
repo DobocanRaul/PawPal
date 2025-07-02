@@ -17,6 +17,7 @@ import {
 import * as SecureStorage from "expo-secure-store";
 import { router } from "expo-router";
 import { IconSymbol } from "../../components/ui/IconSymbol";
+import Toast from "react-native-toast-message";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -25,34 +26,45 @@ export default function LoginPage() {
 
   const login = useCallback(() => {
     const goLogin = async function () {
-      try {
-        const API_URL = process.env.EXPO_PUBLIC_API_URL;
-        const login_URL = API_URL + "/auth/login";
-        const body = JSON.stringify({
-          email: email,
-          password: password,
-        });
-        fetch(login_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-          },
-          body: body,
+      Toast.show({
+        type: "info",
+        text1: "Logging in...",
+        position: "bottom",
+      });
+      const API_URL = process.env.EXPO_PUBLIC_API_URL;
+      const login_URL = API_URL + "/auth/login";
+      const body = JSON.stringify({
+        email: email,
+        password: password,
+      });
+      fetch(login_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+        },
+        body: body,
+      })
+        .then((response) => {
+          console.log("Response status:", response);
+          if (response.status == 401) {
+            console.log("Here");
+            throw new Error("Credentials not ok!");
+          } else return response.json();
         })
-          .then((response) => {
-            if (response.status != 200) {
-              throw new Error("Credentials not ok!");
-            } else return response.json();
-          })
-          .then((data) => {
-            SecureStorage.setItemAsync("userId", data.userId);
-            SecureStorage.setItemAsync("token", data.token);
-            router.replace("/(tabs)");
+        .then((data) => {
+          SecureStorage.setItem("userId", data.userId);
+          SecureStorage.setItem("token", data.token);
+          router.replace("/(tabs)");
+        })
+        .catch((error) => {
+          Toast.show({
+            type: "error",
+            text1: "Login failed",
+            text2: error.message,
+            position: "bottom",
           });
-      } catch (error) {
-        console.error(error);
-      }
+        });
     };
 
     goLogin();

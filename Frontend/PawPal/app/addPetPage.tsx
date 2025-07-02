@@ -53,6 +53,7 @@ export default function AddPetPage() {
         type: "error",
         text1: "Add at least 2 tags",
       });
+      return;
     }
     if (!petName) {
       Toast.show({
@@ -71,8 +72,11 @@ export default function AddPetPage() {
     }
 
     try {
-      Number.parseFloat(age);
-      Number.parseFloat(weight);
+      const parsedAge = Number.parseFloat(age);
+      const parsedWeight = Number.parseFloat(weight);
+      if (parsedAge.toString() != age || parsedWeight.toString() != weight) {
+        throw new Error("Age or weight are not numbers");
+      }
     } catch (error) {
       Toast.show({
         type: "error",
@@ -104,7 +108,7 @@ export default function AddPetPage() {
         body: formData,
         headers: {
           "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-          Bearer: token || "",
+          Authorization: "Bearer " + token || "",
         },
       });
 

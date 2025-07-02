@@ -71,22 +71,25 @@ export default function TabTwoScreen() {
             fetch(sittingsUrl, {
               headers: {
                 "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-                Bearer: token || "",
+                Authorization: "Bearer " + token || "",
               },
             }),
             fetch(userBookingsUrl, {
               headers: {
                 "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-                Bearer: token || "",
+                Authorization: "Bearer " + token || "",
               },
             }),
           ]);
-
           const sittingsData = await sittingsRes.json();
           const requestsData = await requestsRes.json();
 
-          setSittingProfiles(sittingsData);
-          setSittingRequests(requestsData);
+          if (sittingsRes.status === 200) {
+            setSittingProfiles(sittingsData);
+          }
+          if (requestsRes.status === 200) {
+            setSittingRequests(requestsData);
+          }
         } catch (error) {
           console.error("Error fetching bookings:", error);
         } finally {

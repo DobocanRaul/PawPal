@@ -1,12 +1,9 @@
 import { Tabs, useRouter } from "expo-router";
-import React from "react";
-import { useNavigation } from "expo-router";
-import { HapticTab } from "@/components/HapticTab";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import TabBarBackground from "@/components/ui/TabBarBackground";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import { ProfileButton } from "@/components/ui/ProfileButton";
+import { HapticTab } from "../../components/HapticTab";
+import { IconSymbol } from "../../components/ui/IconSymbol";
+import TabBarBackground from "../../components/ui/TabBarBackground";
+import { Colors } from "../../constants/Colors";
+import { ProfileButton } from "../../components/ui/ProfileButton";
 import { TouchableOpacity } from "react-native";
 import * as SecureStorage from "expo-secure-store";
 

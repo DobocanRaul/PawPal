@@ -36,7 +36,7 @@ function createBookingRequest(
     headers: {
       "Content-Type": "application/json",
       "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-      Bearer: SecureStorage.getItem("token") || "",
+      Authorization: "Bearer " + SecureStorage.getItem("token") || "",
     },
     body: JSON.stringify({
       bookingId: bookingId,
@@ -67,6 +67,7 @@ export function DetailedPetView({
         method: "DELETE",
         headers: {
           "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+          Authorization: "Bearer " + SecureStorage.getItem("token") || "",
           Bearer: SecureStorage.getItem("token") || "",
         },
       }).then((response) => {

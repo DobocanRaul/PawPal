@@ -1,5 +1,5 @@
-import { BackButton } from "@/components/ui/BackButton";
-import { Styles } from "@/constants/Styles";
+import { BackButton } from "../components/ui/BackButton";
+import { Styles } from "../constants/Styles";
 import { useRouter } from "expo-router";
 import {
   View,
@@ -12,8 +12,8 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
 import { Booking } from "./(tabs)/schedule";
 import * as SecureStorage from "expo-secure-store";
-import { SittingDetails } from "@/components/ui/SittingDetails";
-import { Colors } from "@/constants/Colors";
+import { SittingDetails } from "../components/ui/SittingDetails";
+import { Colors } from "../constants/Colors";
 
 export default function SittingHistory() {
   const router = useRouter();
@@ -36,13 +36,13 @@ export default function SittingHistory() {
             fetch(asOwnerUrl, {
               headers: {
                 "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-                Bearer: token || "",
+                Authorization: "Bearer " + token || "",
               },
             }),
             fetch(asSitterUrl, {
               headers: {
                 "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
-                Bearer: token || "",
+                Authorization: "Bearer " + token || "",
               },
             }),
           ]);
@@ -50,8 +50,12 @@ export default function SittingHistory() {
           const ownerData = await ownerResponse.json();
           const sitterData = await sitterResponse.json();
 
-          setHistoryAsOwner(ownerData);
-          setHistoryAsSitter(sitterData);
+          if (ownerResponse.status === 200) {
+            setHistoryAsOwner(ownerData);
+          }
+          if (sitterResponse.status === 200) {
+            setHistoryAsSitter(sitterData);
+          }
         } catch (error) {
           console.error("Error fetching sitting history:", error);
         } finally {
