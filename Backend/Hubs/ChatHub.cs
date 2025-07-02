@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.SignalR;
 namespace Backend___PawPal.Hubs;
 
 
-[Authorize]
+[Authorize(AuthenticationSchemes = "Bearer")]
 public class ChatHub : Hub
 {
 

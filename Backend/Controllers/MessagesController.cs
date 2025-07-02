@@ -1,14 +1,14 @@
 ﻿using Backend___PawPal.Context;
 using Backend___PawPal.Models;
-using Microsoft.AspNet.SignalR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using AuthorizeAttribute = Microsoft.AspNetCore.Authorization.AuthorizeAttribute;
 
 namespace Backend___PawPal.Controllers;
 
 [Route("[controller]")]
 [ApiController]
-[Authorize]
+[Authorize(AuthenticationSchemes = "Bearer")]
 public class MessagesController : ControllerBase
 {
     private readonly PawPalDbContext _context;
