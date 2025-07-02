@@ -52,7 +52,24 @@ public class BookingController : ControllerBase
             .Select(b => b.Owner)
             .ToListAsync();
 
+        List<User> bookingRequestsOwners = await _context.BookingRequests
+            .Include(b => b.Sitter)
+            .Include(b => b.Booking)
+            .Where(b => b.Booking.OwnerId == userId)
+            .Select(b=>b.Sitter)
+            .ToListAsync();
+
+       List <User> bookingRequestsSitters = await _context.BookingRequests
+            .Include(b => b.Sitter)
+            .Include(b => b.Booking)
+            .Include (b=>b.Booking.Owner)
+            .Where(b => b.SitterId == userId)
+            .Select(b => b.Booking.Owner)
+            .ToListAsync();
+
         sittersOfbookings.AddRange(ownersOfBookings);
+        sittersOfbookings.AddRange(bookingRequestsOwners);
+        sittersOfbookings.AddRange(bookingRequestsSitters);
 
         List<User> response = sittersOfbookings.Distinct().ToList();
 
